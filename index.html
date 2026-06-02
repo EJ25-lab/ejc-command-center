@@ -1,0 +1,1502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>EJC Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --teal:#1ABCB0; --teal-dark:#148F86; --teal-deep:#0D6B64; --teal-pale:#E0F7F5;
+    --dark:#0B1215; --dark-mid:#141E23; --text:#1A2A30; --mid:#4A5C64;
+    --light:#8A9BA3; --warm:#E8EAEA; --off:#F9FAFB;
+    --orange:#F28C38; --orange-pal:#FEF3E8; --orange-dk:#D4721E;
+    --green:#34C78A; --green-pal:#E8F9F0; --green-dk:#1FA66E;
+    --purple:#9B8AFA; --purple-pal:#F0EEFF; --purple-dk:#6D5CE6;
+    --white:#fff; --font:'Poppins',sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--font);
+    background: var(--off);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    text-align: left;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 32px 80px; }
+
+  /* HEADER — Rule 1: light, teal eyebrow + teal rule */
+  header { padding-bottom: 20px; border-bottom: 2px solid var(--teal); margin-bottom: 32px; }
+  .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
+  .head-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; }
+  h1.brand-title { font-family: var(--font); font-size: 2.1rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; line-height: 1.05; margin: 0; }
+  .brand-sub { font-size: 14px; font-weight: 400; color: var(--mid); margin-top: 6px; }
+  .today-date { font-size: 13px; font-weight: 600; color: var(--mid); text-align: right; flex-shrink: 0; }
+
+  /* SECTION HEADINGS — Rule 6: emoji marker + teal rule */
+  .section-h { display: flex; align-items: center; gap: 12px; border-bottom: 1.5px solid var(--teal); padding-bottom: 8px; margin: 0 0 16px; }
+  .section-h .marker { font-size: 20px; line-height: 1; }
+  .section-h h2 { font-size: 1.32rem; font-weight: 700; color: var(--teal-deep); letter-spacing: -0.01em; margin: 0; }
+  .section-h .hint { font-size: 13px; font-weight: 400; color: var(--mid); margin-left: auto; }
+
+  /* COUNTDOWN STRIP — Rule 5: rare boxes, accent rule + soft fills */
+  .strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+  .countdown { background: var(--white); border: 1px solid var(--warm); border-left: 3px solid var(--teal); border-radius: 12px; padding: 16px 18px; cursor: pointer; transition: transform 0.15s, border-color 0.2s; }
+  .countdown:hover { transform: translateY(-2px); border-color: var(--teal); }
+  .countdown .marker { font-size: 16px; margin-bottom: 6px; }
+  .countdown .label { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--mid); margin-bottom: 8px; }
+  .countdown .value { font-size: 2rem; font-weight: 800; color: var(--text); line-height: 1; letter-spacing: -0.02em; }
+  .countdown .value small { font-size: 13px; font-weight: 600; color: var(--mid); margin-left: 4px; }
+  .countdown .sub { font-size: 12px; color: var(--mid); margin-top: 6px; line-height: 1.4; }
+  .countdown.critical { border-left-color: var(--orange-dk); }
+  .countdown.critical .value { color: var(--orange-dk); }
+  .countdown.warning { border-left-color: var(--orange); }
+  .countdown.progress { border-left-color: var(--green); }
+  .countdown.progress .value { color: var(--green-dk); }
+  .court-input { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+  .court-input input { font-family: var(--font); font-size: 13px; padding: 6px 8px; border: 1px solid var(--warm); border-radius: 6px; }
+
+  /* XP STRIP — gamification energy, but not a full dark band (Rule 1) */
+  .xp-strip { display: grid; grid-template-columns: auto 1fr auto auto; gap: 24px; align-items: center; padding: 18px 24px; background: var(--teal-pale); border: 1px solid var(--teal); border-radius: 14px; margin-bottom: 30px; }
+  .xp-strip .level-block { }
+  .xp-strip .level-label { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal-deep); margin-bottom: 4px; }
+  .xp-strip .xp-num { font-size: 1.8rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; line-height: 1; }
+  .xp-strip .xp-num small { font-size: 12px; font-weight: 600; color: var(--mid); margin-left: 4px; }
+  .xp-bar { height: 10px; background: var(--white); border-radius: 5px; overflow: hidden; border: 1px solid var(--warm); }
+  .xp-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--purple)); transition: width 0.4s; }
+  .xp-strip .streak { font-size: 15px; font-weight: 600; color: var(--text); }
+  .xp-strip .streak b { color: var(--orange-dk); font-weight: 800; font-size: 1.2rem; }
+  .xp-strip .target { font-size: 12px; font-weight: 600; color: var(--mid); text-align: right; }
+  .xp-strip .target b { color: var(--text); font-weight: 800; font-size: 14px; }
+
+  /* TODAY'S 3 — clean panel, no dark box */
+  .todays-three { background: var(--white); border: 1px solid var(--warm); border-radius: 12px; padding: 20px 22px; margin-bottom: 30px; }
+  .t3-row { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px dashed var(--warm); }
+  .t3-row:last-of-type { border-bottom: none; }
+  .t3-row input[type=checkbox] { width: 22px; height: 22px; accent-color: var(--teal); cursor: pointer; flex-shrink: 0; }
+  .t3-row input[type=text] { flex: 1; border: none; background: transparent; font-family: var(--font); font-size: 16px; font-weight: 500; color: var(--text); padding: 4px 0; }
+  .t3-row input[type=text]:focus { outline: none; border-bottom: 1.5px solid var(--teal); }
+  .t3-row.done input[type=text] { text-decoration: line-through; color: var(--light); font-weight: 400; }
+  .t3-row .lane-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 100px; cursor: pointer; background: var(--off); color: var(--mid); border: 1px solid var(--warm); }
+  .t3-row .lane-tag.legal { background: var(--orange-pal); color: var(--orange-dk); border-color: var(--orange); }
+  .t3-row .lane-tag.business { background: var(--teal-pale); color: var(--teal-deep); border-color: var(--teal); }
+  .t3-row .lane-tag.capital { background: var(--green-pal); color: var(--green-dk); border-color: var(--green); }
+  .t3-row .lane-tag.content { background: var(--purple-pal); color: var(--purple-dk); border-color: var(--purple); }
+  .t3-row .break-btn { font-family: var(--font); font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 10px; border-radius: 6px; background: var(--teal-pale); color: var(--teal-deep); border: 1px solid var(--teal); cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+  .t3-row .break-btn:hover { background: var(--teal); color: var(--white); }
+  .t3-row .break-btn.thinking { background: var(--orange-pal); color: var(--orange-dk); border-color: var(--orange); }
+
+  /* SUBSTEPS — 5-minute next actions */
+  .substeps { padding-left: 36px; margin: -4px 0 12px; border-left: 2px solid var(--teal-pale); padding-top: 6px; padding-bottom: 6px; background: linear-gradient(90deg, rgba(26,188,176,0.04), transparent 30%); }
+  .substep { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 13px; }
+  .substep input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--teal); cursor: pointer; flex-shrink: 0; }
+  .substep span { flex: 1; color: var(--text); line-height: 1.4; }
+  .substep.done span { text-decoration: line-through; color: var(--light); }
+  .substep .micro-tag { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mid); background: var(--off); padding: 2px 7px; border-radius: 100px; border: 1px solid var(--warm); }
+  .substep-empty { font-size: 11px; color: var(--light); font-style: italic; padding: 4px 0; }
+  .lane li.has-subs { flex-direction: column; align-items: stretch; gap: 4px; }
+  .lane li.has-subs .li-main { display: flex; gap: 10px; align-items: flex-start; }
+  .lane li .break-btn-sm { font-family: var(--font); font-size: 9px; font-weight: 700; letter-spacing: 0.06em; padding: 3px 8px; border-radius: 5px; background: transparent; color: var(--teal-deep); border: 1px solid var(--teal-pale); cursor: pointer; white-space: nowrap; align-self: center; }
+  .lane li .break-btn-sm:hover { background: var(--teal-pale); }
+  .lane li .break-btn-sm.thinking { background: var(--orange-pal); color: var(--orange-dk); }
+
+  /* WHERE DO I START — the big anti-overwhelm button */
+  .start-button-wrap { margin-bottom: 26px; }
+  .start-button { width: 100%; padding: 22px 28px; background: linear-gradient(95deg, var(--orange) 0%, #F2A53E 60%, var(--teal) 130%); color: var(--white); border: none; border-radius: 16px; font-family: var(--font); font-size: 18px; font-weight: 800; letter-spacing: -0.01em; cursor: pointer; box-shadow: 0 8px 24px rgba(242,140,56,.25); transition: transform 0.15s, box-shadow 0.2s; text-align: left; display: flex; justify-content: space-between; align-items: center; }
+  .start-button:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(242,140,56,.35); }
+  .start-button .sb-l { display: flex; flex-direction: column; gap: 4px; }
+  .start-button .sb-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.85; }
+  .start-button .sb-arrow { font-size: 24px; }
+  .start-button.thinking { background: var(--teal-deep); }
+  .start-result { background: var(--teal-pale); border: 1.5px solid var(--teal); border-radius: 12px; padding: 16px 20px; margin-top: 10px; font-size: 15px; color: var(--text); line-height: 1.6; display: none; }
+  .start-result.show { display: block; animation: slideIn 0.35s ease; }
+  .start-result b { color: var(--teal-deep); }
+
+  .t3-actions { display: flex; gap: 10px; margin-top: 14px; }
+  .stuck-btn, .reset-btn { font-family: var(--font); font-size: 13px; font-weight: 600; padding: 10px 18px; border-radius: 10px; border: 1.5px solid var(--warm); background: var(--white); color: var(--text); cursor: pointer; transition: all 0.2s; }
+  .stuck-btn:hover { background: var(--teal); color: var(--white); border-color: var(--teal); transform: translateY(-1px); }
+  .reset-btn:hover { background: var(--off); border-color: var(--mid); }
+
+  /* LANES */
+  .lanes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 30px; }
+  .lane { background: var(--white); border: 1px solid var(--warm); border-left: 3px solid var(--teal); border-radius: 12px; padding: 20px; }
+  .lane.legal { border-left-color: var(--orange-dk); }
+  .lane.business { border-left-color: var(--teal); }
+  .lane.capital { border-left-color: var(--green-dk); }
+  .lane.content { border-left-color: var(--purple-dk); }
+  .lane h3 { font-family: var(--font); font-size: 15px; font-weight: 700; color: var(--text); margin: 0 0 6px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .lane h3 .lane-emoji { font-size: 18px; margin-right: 4px; }
+  .lane h3 .health { font-size: 10px; padding: 3px 10px; border-radius: 100px; font-weight: 700; letter-spacing: 0.06em; }
+  .health.green { background: var(--green-pal); color: var(--green-dk); }
+  .health.yellow { background: var(--orange-pal); color: var(--orange-dk); }
+  .health.red { background: var(--orange-pal); color: var(--orange-dk); border: 1px solid var(--orange-dk); }
+  .lane .lane-sub { font-size: 12px; color: var(--mid); margin-bottom: 14px; line-height: 1.5; }
+  .lane ul { list-style: none; padding: 0; margin: 0; }
+  .lane li { display: flex; gap: 10px; padding: 7px 0; font-size: 14px; line-height: 1.5; align-items: flex-start; }
+  .lane li input[type=checkbox] { margin-top: 3px; accent-color: var(--teal); flex-shrink: 0; }
+  .lane li.done span { text-decoration: line-through; color: var(--light); }
+  .lane li span { flex: 1; color: var(--text); }
+  .lane .add { display: flex; gap: 8px; margin-top: 12px; }
+  .lane .add input { flex: 1; font-family: var(--font); border: 1px solid var(--warm); border-radius: 8px; padding: 8px 10px; font-size: 13px; }
+  .lane .add button { font-family: var(--font); background: var(--teal); color: var(--white); border: none; border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+  .lane .add button:hover { background: var(--teal-dark); }
+
+  /* SLIPPED + WINS */
+  .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 30px; }
+  .panel { background: var(--white); border: 1px solid var(--warm); border-radius: 12px; padding: 20px; }
+  .panel ul { list-style: none; padding: 0; margin: 0; }
+  .slipped li { font-size: 14px; padding: 8px 0; color: var(--orange-dk); border-bottom: 1px dashed var(--warm); }
+  .slipped li:last-of-type { border-bottom: none; }
+  .slipped li b { color: var(--text); font-weight: 700; }
+  .slipped .empty, .wins .empty { color: var(--light); font-size: 14px; font-style: italic; }
+  .wins li { font-size: 14px; padding: 6px 0; color: var(--green-dk); }
+  .wins li small { color: var(--light); font-weight: 600; }
+
+  /* QUICK ACTIONS */
+  .quicklinks { background: var(--white); border: 1px solid var(--warm); border-radius: 12px; padding: 22px 24px; margin-bottom: 24px; }
+  .quicklinks .qrow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .quicklinks button { font-family: var(--font); background: var(--off); border: 1px solid var(--warm); border-radius: 10px; padding: 12px 14px; font-size: 13px; font-weight: 600; cursor: pointer; text-align: left; color: var(--text); transition: all 0.15s; }
+  .quicklinks button:hover { background: var(--teal); color: var(--white); border-color: var(--teal); transform: translateY(-1px); }
+
+  /* BADGES — gamification accent */
+  .badges-panel { background: var(--white); border: 1px solid var(--warm); border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+  .badges { display: flex; gap: 10px; flex-wrap: wrap; }
+  .badge { font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 100px; background: var(--off); color: var(--light); border: 1px solid var(--warm); }
+  .badge.earned { background: var(--purple); color: var(--white); border-color: var(--purple-dk); font-weight: 700; }
+  .badge.earned::before { content: '★ '; }
+
+  /* FOOTER — Rule 1: thin dark bar */
+  footer { background: var(--dark); color: var(--teal); font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-align: center; padding: 12px; margin: 40px -32px -80px; text-transform: uppercase; }
+
+  /* DAILY RHYTHM RIBBON */
+  .rhythm { display: grid; grid-template-columns: auto 1fr auto; gap: 20px; align-items: center; padding: 16px 22px; background: linear-gradient(95deg, var(--teal-pale) 0%, var(--off) 100%); border: 1px solid var(--teal); border-radius: 14px; margin-bottom: 26px; }
+  .rhythm .ritual { display: flex; gap: 18px; font-size: 13px; color: var(--text); font-weight: 500; flex-wrap: wrap; }
+  .rhythm .ritual span { display: inline-flex; align-items: center; gap: 6px; }
+  .rhythm .ritual b { font-weight: 700; color: var(--teal-deep); }
+  .rhythm .loc-label { font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mid); margin-right: 4px; }
+  .rhythm .loc-pills { display: flex; gap: 6px; }
+  .rhythm .loc-pill { font-family: var(--font); font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 100px; background: var(--white); border: 1.5px solid var(--warm); color: var(--mid); cursor: pointer; transition: all 0.15s; }
+  .rhythm .loc-pill:hover { border-color: var(--teal); color: var(--teal-deep); }
+  .rhythm .loc-pill.active { background: var(--teal); color: var(--white); border-color: var(--teal-dark); font-weight: 700; }
+  .rhythm .inspire { font-family: var(--font); font-style: italic; font-size: 13px; color: var(--teal-deep); font-weight: 500; max-width: 320px; line-height: 1.45; }
+
+  /* LIFE METERS — multi-axis dopamine */
+  .meters-wrap { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 26px; }
+  .meter { background: var(--white); border: 1px solid var(--warm); border-radius: 12px; padding: 14px 14px 12px; }
+  .meter .m-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .meter .m-emoji { font-size: 18px; }
+  .meter .m-name { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mid); }
+  .meter .m-val { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1; margin-bottom: 4px; }
+  .meter .m-sub { font-size: 10px; color: var(--mid); font-weight: 600; min-height: 14px; }
+  .meter .m-bar { height: 6px; background: var(--off); border-radius: 3px; margin-top: 8px; overflow: hidden; }
+  .meter .m-fill { height: 100%; transition: width 0.5s cubic-bezier(.34,1.56,.64,1); }
+  .meter.courage .m-emoji, .meter.courage .m-val { color: var(--orange-dk); }
+  .meter.courage .m-fill { background: var(--orange-dk); }
+  .meter.focus .m-emoji, .meter.focus .m-val { color: var(--teal-deep); }
+  .meter.focus .m-fill { background: var(--teal); }
+  .meter.voice .m-emoji, .meter.voice .m-val { color: var(--purple-dk); }
+  .meter.voice .m-fill { background: var(--purple); }
+  .meter.care .m-emoji, .meter.care .m-val { color: #c87a3e; }
+  .meter.care .m-fill { background: #e8a464; }
+  .meter.capital .m-emoji, .meter.capital .m-val { color: var(--green-dk); }
+  .meter.capital .m-fill { background: var(--green); }
+
+  /* TOAST — spark + meter notifications */
+  #toast-stack { position: fixed; bottom: 22px; right: 22px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; max-width: 360px; }
+  .toast { background: var(--dark); color: var(--white); padding: 14px 18px; border-radius: 12px; font-family: var(--font); font-size: 14px; line-height: 1.45; box-shadow: 0 12px 32px rgba(0,0,0,.18); border-left: 4px solid var(--teal); animation: slideIn 0.35s cubic-bezier(.34,1.56,.64,1), fadeOut 0.4s ease 4.6s forwards; pointer-events: auto; }
+  .toast.spark { border-left-color: var(--orange); font-style: italic; font-weight: 500; }
+  .toast.meter { border-left-color: var(--teal); font-weight: 600; }
+  .toast .t-meta { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal); margin-bottom: 4px; opacity: 0.85; }
+  .toast.spark .t-meta { color: var(--orange); }
+  @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  @keyframes fadeOut { to { opacity: 0; transform: translateX(20%); } }
+
+  /* CONFETTI canvas */
+  #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9998; }
+
+  /* GATED SECTIONS — action unlocks depth */
+  .gate { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.6s ease, opacity 0.5s ease, margin 0.4s ease; margin: 0 !important; pointer-events: none; }
+  .gate.unlocked { max-height: 4000px; opacity: 1; pointer-events: auto; }
+  .gate.unlocked.has-margin { margin-bottom: 26px !important; }
+  .unlock-hint { background: var(--off); border: 1px dashed var(--warm); border-radius: 10px; padding: 12px 18px; margin-bottom: 22px; font-size: 13px; color: var(--mid); text-align: center; font-weight: 500; }
+  .unlock-hint b { color: var(--teal-deep); font-weight: 700; }
+  .unlock-hint .uh-count { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--purple-dk); margin-bottom: 4px; display: block; }
+
+  /* RITUAL LAYER — sunrise + Sunday only */
+  .ritual-card { background: linear-gradient(135deg, #fff5e6 0%, var(--teal-pale) 100%); border: 1.5px solid var(--orange); border-radius: 16px; padding: 22px 26px; margin-bottom: 26px; display: none; }
+  .ritual-card.show { display: block; animation: slideIn 0.5s ease; }
+  .ritual-card .r-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--orange-dk); margin-bottom: 12px; }
+  .ritual-card .r-thesis { font-size: 17px; font-weight: 600; color: var(--text); line-height: 1.5; margin-bottom: 14px; }
+  .ritual-card .r-cite { font-size: 12px; color: var(--mid); font-style: italic; margin-bottom: 14px; }
+  .ritual-card .r-expand { font-family: var(--font); font-size: 12px; font-weight: 700; padding: 6px 14px; background: var(--white); border: 1px solid var(--teal); color: var(--teal-deep); border-radius: 100px; cursor: pointer; }
+  .ritual-card .r-tiers { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.08); }
+  .ritual-card .r-tiers.show { display: block; }
+  .ritual-card .r-tier { display: flex; gap: 12px; padding: 8px 0; font-size: 13px; align-items: flex-start; }
+  .ritual-card .r-tier b { color: var(--orange-dk); font-weight: 700; min-width: 28px; }
+  .ritual-card .r-kofi { font-size: 13px; font-style: italic; color: var(--teal-deep); margin-top: 14px; padding: 12px 14px; background: rgba(26,188,176,0.08); border-radius: 8px; border-left: 3px solid var(--teal); }
+
+  /* SOUND TOGGLE */
+  .sound-toggle { position: fixed; top: 14px; right: 14px; z-index: 100; background: var(--white); border: 1px solid var(--warm); border-radius: 100px; padding: 6px 12px; font-family: var(--font); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: var(--mid); cursor: pointer; }
+  .sound-toggle.on { background: var(--teal); color: var(--white); border-color: var(--teal-dark); }
+
+  /* AUDIO FUEL */
+  .audio-strip { background: var(--white); border: 1px solid var(--warm); border-left: 3px solid var(--purple); border-radius: 12px; padding: 16px 20px; margin-bottom: 26px; display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; }
+  .audio-mood { display: flex; gap: 6px; flex-wrap: wrap; }
+  .audio-mood button { font-family: var(--font); font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 100px; background: var(--purple-pal); color: var(--purple-dk); border: 1.5px solid var(--purple-pal); cursor: pointer; }
+  .audio-mood button:hover { border-color: var(--purple); }
+  .audio-mood button.active { background: var(--purple); color: var(--white); border-color: var(--purple-dk); }
+  .audio-shows { display: flex; gap: 6px; flex-wrap: wrap; }
+  .audio-show { font-family: var(--font); font-size: 12px; padding: 5px 12px; border-radius: 100px; background: var(--off); border: 1px solid var(--warm); color: var(--text); cursor: pointer; font-weight: 500; transition: all 0.15s; }
+  .audio-show:hover { border-color: var(--purple); color: var(--purple-dk); }
+  .audio-show.playing { background: var(--purple); color: var(--white); border-color: var(--purple-dk); font-weight: 700; }
+  .audio-now { font-size: 12px; color: var(--mid); font-weight: 600; min-width: 140px; text-align: right; }
+  .audio-now b { color: var(--purple-dk); }
+
+  /* THIS WEEK STRIP */
+  .week-strip { background: var(--white); border: 1px solid var(--warm); border-radius: 12px; padding: 18px 22px; margin-bottom: 26px; }
+  .week-strip .week-row { display: flex; align-items: center; gap: 18px; padding: 8px 0; border-bottom: 1px dashed var(--warm); }
+  .week-strip .week-row:last-child { border-bottom: none; }
+  .week-strip .week-date { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple-dk); min-width: 130px; }
+  .week-strip .week-time { font-size: 13px; font-weight: 600; color: var(--text); min-width: 100px; }
+  .week-strip .week-title { font-size: 14px; color: var(--text); flex: 1; }
+  .week-strip .week-link { font-size: 12px; color: var(--teal-deep); font-weight: 600; text-decoration: none; padding: 4px 10px; border: 1px solid var(--teal); border-radius: 6px; }
+  .week-strip .week-link:hover { background: var(--teal); color: var(--white); }
+  .week-strip .empty { color: var(--light); font-size: 13px; font-style: italic; text-align: center; padding: 8px; }
+
+  @media (max-width: 860px) {
+    .strip { grid-template-columns: repeat(2, 1fr); }
+    .lanes, .bottom-grid { grid-template-columns: 1fr; }
+    .quicklinks .qrow { grid-template-columns: 1fr 1fr; }
+    .xp-strip { grid-template-columns: 1fr; gap: 14px; text-align: left; }
+    .xp-strip .target { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">EdJustice Collective · Command Center</div>
+  <div class="head-row">
+    <div>
+      <h1 class="brand-title">Today, Tyra.</h1>
+      <div class="brand-sub">Chief Possibility Pilot · Build systems. Promote justice.</div>
+    </div>
+    <div class="today-date" id="today-date"></div>
+  </div>
+</header>
+
+<!-- DAILY RHYTHM RIBBON -->
+<div class="rhythm">
+  <div class="ritual">
+    <span>🌅 <b>6–7 AM</b> sunrise + meditate</span>
+    <span>🌊 <b>Outside</b> beach / bridge / pull-off</span>
+    <span>🚗 <b>Car</b> brain resets</span>
+  </div>
+  <div class="inspire" id="inspire-line">Build systems. Promote justice.</div>
+  <div>
+    <div class="loc-label">Today I'm at</div>
+    <div class="loc-pills" id="loc-pills"></div>
+  </div>
+</div>
+
+<!-- RITUAL CARD — sunrise + Sunday review only -->
+<div class="ritual-card" id="ritual-card">
+  <div class="r-eyebrow" id="r-eyebrow">🌅 Sunrise window</div>
+  <div class="r-thesis">Stakeholder knowledge IS the gap.</div>
+  <div class="r-cite">11.1M students. 5 tiers. A decade brewing. — Tyra · Chief Possibility Pilot</div>
+  <button class="r-expand" id="r-expand">See the framework ↓</button>
+  <div class="r-tiers" id="r-tiers">
+    <div class="r-tier"><b>T1</b> <span>State Agencies — readily available tools + expert personnel</span></div>
+    <div class="r-tier"><b>T2</b> <span>District Leadership — outcome-based training, coaching, tools for implementation</span></div>
+    <div class="r-tier"><b>T3</b> <span>School Boards — knowledge + support for using district data + decision-making tools</span></div>
+    <div class="r-tier"><b>T4</b> <span>Parent & Community Partners — resources to build knowledge of standards + how to support</span></div>
+    <div class="r-tier"><b>T5</b> <span>School Level Personnel — expertise in designing + implementing differentiated instruction</span></div>
+    <div class="r-kofi">"Knowledge is power. Information is liberating. Education is the premise of progress, in every society, in every family." — Kofi Annan</div>
+  </div>
+</div>
+
+<!-- AUDIO FUEL — gated tier 1 -->
+<div class="gate has-margin" data-unlock="1">
+  <div class="section-h">
+    <span class="marker">🎧</span>
+    <h2>Audio fuel</h2>
+    <span class="hint">What's in your ears today.</span>
+  </div>
+  <div class="audio-strip">
+    <div class="audio-mood" id="audio-mood"></div>
+    <div class="audio-shows" id="audio-shows"></div>
+    <div class="audio-now" id="audio-now"></div>
+  </div>
+</div>
+
+<!-- THIS WEEK'S ANCHORS — gated tier 3 -->
+<div class="gate has-margin" data-unlock="3">
+  <div class="section-h">
+    <span class="marker">🗓️</span>
+    <h2>This week's anchors</h2>
+    <span class="hint">Meetings + drops the brief misses.</span>
+  </div>
+  <div class="week-strip" id="week-strip"></div>
+</div>
+
+<!-- COUNTDOWN STRIP — gated tier 3 -->
+<div class="gate has-margin" data-unlock="3">
+  <div class="section-h">
+    <span class="marker">🗓️</span>
+    <h2>What the clock says</h2>
+  </div>
+  <div class="strip" id="countdown-strip"></div>
+</div>
+
+<!-- XP STRIP — gated tier 3 -->
+<div class="gate has-margin" data-unlock="3"><div class="xp-strip">
+  <div class="level-block">
+    <div class="level-label" id="level-label">Level 1 · Architect</div>
+    <div class="xp-num"><span id="xp-num">0</span><small>XP</small></div>
+  </div>
+  <div class="xp-bar"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+  <div class="streak">Streak <b id="streak-num">0</b> 🔥</div>
+  <div class="target">60-day capital target <b>$75,000</b><br><span id="capital-raised">$0 raised</span></div>
+</div></div>
+
+<!-- WHERE DO I START — anti-overwhelm primary button -->
+<div class="start-button-wrap">
+  <button class="start-button" id="start-button">
+    <div class="sb-l">
+      <span class="sb-eyebrow">Overwhelmed? Tap.</span>
+      <span>Where do I start right now?</span>
+    </div>
+    <span class="sb-arrow">→</span>
+  </button>
+  <div class="start-result" id="start-result"></div>
+</div>
+
+<!-- TODAY'S 3 -->
+<div class="section-h">
+  <span class="marker">🎯</span>
+  <h2>Today's 3</h2>
+  <span class="hint">Maximum three. Tap "break it down" on any to make the start tiny.</span>
+</div>
+<div class="todays-three">
+  <div id="t3-list"></div>
+  <div class="t3-actions">
+    <button class="reset-btn" id="reset-day-btn">Reset Today's 3</button>
+  </div>
+</div>
+
+<!-- UNLOCK HINT — always visible, shows next tier -->
+<div class="unlock-hint" id="unlock-hint">
+  <span class="uh-count" id="uh-count">Today: 0 checks</span>
+  <span id="uh-msg"><b>Audio Fuel</b> unlocks at 1 check. Tap one off.</span>
+</div>
+
+<!-- LANES — gated tier 5 -->
+<div class="gate has-margin" data-unlock="5">
+<div class="section-h">
+  <span class="marker">📍</span>
+  <h2>The four lanes</h2>
+  <span class="hint">Court drives the rhythm. Everything else flexes.</span>
+</div>
+<div class="lanes" id="lanes"></div>
+</div>
+
+<!-- SLIPPED + WINS — gated tier 5 -->
+<div class="gate has-margin" data-unlock="5"><div class="bottom-grid">
+  <div class="panel">
+    <div class="section-h" style="margin-bottom:12px">
+      <span class="marker">⚠️</span>
+      <h2 style="font-size:1.05rem">What slipped</h2>
+    </div>
+    <ul class="slipped" id="slipped-list"></ul>
+  </div>
+  <div class="panel">
+    <div class="section-h" style="margin-bottom:12px">
+      <span class="marker">✅</span>
+      <h2 style="font-size:1.05rem">Recent wins</h2>
+    </div>
+    <ul class="wins" id="wins-list"></ul>
+  </div>
+</div>
+
+</div>
+
+<!-- QUICK ACTIONS — gated tier 7 -->
+<div class="gate has-margin" data-unlock="7">
+<div class="section-h">
+  <span class="marker">📊</span>
+  <h2>Quick actions</h2>
+  <span class="hint">Click to copy prompt — paste in chat.</span>
+</div>
+<div class="quicklinks">
+  <div class="qrow">
+    <button data-prompt="Read /Users/edjustice/Desktop/Command_Center/CHIEF_OF_STAFF.md and run the Sunday strategic review with me. Walk through the questions and help me pick next week's 3 lane priorities.">📋 Sunday review</button>
+    <button data-prompt="Read /Users/edjustice/Desktop/Command_Center/60_DAY_PLAN.md and tell me the single most important thing to move on today. Be direct.">🎯 What's most important today?</button>
+    <button data-prompt="Help me finalize the EJC_AlphaBet_AppPackage_v1.docx for the June 18 deadline. Pull the file from Drive and tell me what still needs work.">🏫 Alpha-Bet — finalize for June 18</button>
+    <button data-prompt="Help me prep questions for the WY + multi-state small-business attorney consult. I'm forming a Wyoming LLC, operating from Florida, with foreign qualification targeted to VA + NC first (Tier 1 from the Provider Pathway doc), then GA + SC (Tier 2). Draft the consult agenda.">⚖️ Prep WY attorney consult</button>
+    <button data-prompt="Help me draft the next follow-up to Great Oaks. Show me the draft in chat first — do not send. Ask me first what Great Oaks has seen and what the last touchpoint was.">✉️ Draft Great Oaks follow-up</button>
+    <button data-prompt="Run the ejc-bid-response skill — pull open RFPs matching EJC's NAICS codes from the EJC Bid Pipeline sheet. I want to pick ONE grant target for the next 60 days.">💰 Pick one grant target</button>
+    <button data-prompt="Help me write the next Justice is in the Details LinkedIn newsletter issue. Use the ejc-linkedin-content skill.">📝 Write next newsletter</button>
+    <button data-prompt="Read /Users/edjustice/Desktop/familyroom/CLAUDE.md and tell me the next concrete step to finish the AI Family Room build.">🚀 Next AI Family Room step</button>
+    <button data-prompt="Open the EJC Crisis Dashboard at https://ej25-lab.github.io/ejc-crisis-dashboard/ — review the live page and tell me what needs to update this week.">🏛️ Crisis Dashboard check</button>
+    <button data-prompt="Help me prep the next Governance Lab read-ahead packet. Tell me which board we're targeting and pull the EJC_OASD_Mailer_v1.pdf pattern as the template.">🏛️ Governance Lab — next board</button>
+    <button data-prompt="Read /Users/edjustice/Desktop/Command_Center/DECISION_LOG.md and help me log a new decision. Ask me the cost, expected return, and review date.">🧠 Log a decision</button>
+    <button data-prompt="It's Friday — capture the week's wins. Help me update /Users/edjustice/Desktop/Command_Center/WINS.md.">✅ Capture this week's wins</button>
+  </div>
+</div>
+
+</div>
+
+<!-- BADGES — gated tier 7 -->
+<div class="gate has-margin" data-unlock="7">
+<div class="section-h">
+  <span class="marker">🎓</span>
+  <h2>Badges</h2>
+  <span class="hint">Earn them. Don't chase them.</span>
+</div>
+<div class="badges-panel">
+  <div class="badges" id="badges"></div>
+</div>
+</div>
+
+</div>
+
+<!-- Toast notifications + confetti canvas -->
+<div id="toast-stack"></div>
+<canvas id="confetti-canvas"></canvas>
+<button class="sound-toggle" id="sound-toggle">🔊 SOUND ON</button>
+
+<footer>
+  EdJustice Collective · Build Systems. Promote Justice. · EIN 99-3477706
+</footer>
+
+<script>
+// ============ STATE ============
+const STORAGE_KEY = 'ejc_command_v6';
+const DEFAULT_STATE = {
+  todaysLocation: "",
+  audioMood: "all",
+  nowPlaying: "",
+  inspireIdx: 0,
+  soundOn: true,
+  meters: { courage: 0, focus: 0, voice: 0, care: 0, capital: 0 },
+  taskSubsteps: {
+    "lane-legal-0": [
+      { text: "Open /Desktop/Soft Copy EPISD files/Case Organization Guide.md — anchor", done: false },
+      { text: "Create a new doc: EPISD_Violations_Timeline_v1.md (matrix: Date | Event | Standard/Policy Violated | Handbook §/State § | Source Doc | Evidence Link)", done: false },
+      { text: "Pull all dated events from Timeline of Events folder — Jan 2024 → March 2025", done: false },
+      { text: "Locate EPISD district handbook PDF — list the 5-10 sections most relevant (employee rights, grievance, retaliation, FMLA, ADA, equal opp, investigation procedures)", done: false },
+      { text: "Locate TX state policy sources (TEC, TAC §157, TEA grievance rules) — list relevant sections", done: false },
+      { text: "Fill first 5 rows of the matrix — one event at a time, name the violation precisely", done: false },
+      { text: "Read /harrison-episd-legal skill before writing any legal characterization (skill governs voice + claims)", done: false },
+      { text: "Continue matrix row by row — keep each row to 1-2 sentences", done: false },
+      { text: "Email the matrix to attorney as PDF + Markdown when complete", done: false }
+    ],
+    "t3-0": [
+      { text: "Open EJC_AlphaBet_LeadBrief_v3.pdf and read it once", done: false },
+      { text: "Decide: send via email or share via Drive link", done: false },
+      { text: "Draft 3-line cover note (subject + body)", done: false },
+      { text: "Hit send / share the link", done: false }
+    ],
+    "t3-1": [
+      { text: "Open the chat with the 4 tightened app answers", done: false },
+      { text: "Copy Field 1 into the application form", done: false },
+      { text: "Copy Field 2", done: false },
+      { text: "Copy Field 3", done: false },
+      { text: "Copy Field 4", done: false }
+    ],
+    "t3-2": [
+      { text: "Pick the shot location (Causeway sunrise or home)", done: false },
+      { text: "Read the 60-sec script aloud once for pace", done: false },
+      { text: "Shoot 3 takes, pick the strongest", done: false },
+      { text: "Upload + paste into Alpha-Bet application", done: false },
+      { text: "Hit submit", done: false }
+    ]
+  },
+  thisWeek: [
+    { date: "Tue Jun 3", time: "PM", title: "Cook for family of 4 (anticipate + buy)", link: "" },
+    { date: "Wed Jun 3", time: "—", title: "WY LLC payment retry (call bank first)", link: "" },
+    { date: "Thu Jun 4", time: "AM", title: "Alpha-Bet — SUBMIT (4 fields + video + brief sent)", link: "" },
+    { date: "Thu Jun 4", time: "2–4pm ET", title: "Tyra/Tracy Data Review — E3 dashboard drop", link: "https://greenhouse3-org.zoom.us/j/89957757792?pwd=ev4WQvOfG7xilQeWcHu0UAOTtmc5u6.1&jst=2" },
+    { date: "Fri Jun 5", time: "TBD", title: "Spouse Symposium — speaker panel (details in personal email)", link: "" },
+    { date: "Sun Jun 7", time: "PM", title: "Cook for family of 4 (anticipate + buy)", link: "" },
+    { date: "Sun Jun 7", time: "7pm", title: "Sunday strategic review", link: "" }
+  ],
+  todaysThree: [
+    { text: "Alpha-Bet — send v3 Lead Brief PDF to program lead", lane: "capital", done: false },
+    { text: "Alpha-Bet — paste 4 tightened app answers into application", lane: "capital", done: false },
+    { text: "Alpha-Bet — shoot 60-sec video + submit by Thursday", lane: "capital", done: false }
+  ],
+  lanes: {
+    legal: {
+      name: "Legal — Harrison v. EPISD",
+      emoji: "📍",
+      sub: "Today's deep work (after Alpha-Bet ships): handbook + state-policy violations timeline for the lawyers.",
+      items: [
+        { text: "🔴 PRIMARY — Detailed timeline cross-referenced with district handbook + state policies broken", done: false },
+        { text: "Confirm next filing/brief deadline", done: false },
+        { text: "Update attorney handoff package with timeline", done: false },
+        { text: "Re-index recent evidence into taxonomy", done: false }
+      ]
+    },
+    business: {
+      name: "Business — WY LLC + Email Transition + State List",
+      emoji: "🏛️",
+      sub: "Tier 1 states: VA + NC. Tier 2: GA + SC.",
+      items: [
+        { text: "WY LLC formation — retry Northwest payment (call bank first)", done: false },
+        { text: "Email transition runbook — start 7-day cutover", done: false },
+        { text: "Capability statement updated to new entity name", done: false },
+        { text: "FL registered agent confirmed", done: false },
+        { text: "SAM.gov registration for federal grants", done: false }
+      ]
+    },
+    capital: {
+      name: "Capital — Alpha-Bet, Tracy/E3, Mil-Spouse, Provider Pathway",
+      emoji: "🎯",
+      sub: "Alpha-Bet submit Thu Jun 4 · $500K ask locked · Y1 $527K–$840K.",
+      items: [
+        { text: "Alpha-Bet — send Lead Brief PDF to program lead", done: false },
+        { text: "Alpha-Bet — paste 4 tightened app answers", done: false },
+        { text: "Alpha-Bet — shoot 60-sec video", done: false },
+        { text: "Alpha-Bet — SUBMIT Thursday June 4", done: false },
+        { text: "Tracy 6/4 prep — E3 data drop questions + dashboard refresh plan", done: false },
+        { text: "Tracy 6/4 — meeting (Thu 2-4pm ET, Greenhouse3 Zoom)", done: false },
+        { text: "E3 dashboard — update with Tracy's data after meeting", done: false },
+        { text: "Mil-spouse session — print cards on 100lb cover (office supply)", done: false },
+        { text: "Friday Symposium panel — confirm time/location from personal email", done: false },
+        { text: "Friday Symposium panel — prep + show up", done: false },
+        { text: "Provider Pathway — Virginia (start, open-content, sell now)", done: false },
+        { text: "Provider Pathway — NC verify with NC DPI", done: false },
+        { text: "Great Oaks — next follow-up move", done: false },
+        { text: "Bev Britt VDOE — 14-day light touch", done: false },
+        { text: "Oshkosh OASD — Governance Lab board packet next step", done: false },
+        { text: "Pick ONE grant target via ejc-bid-response", done: false },
+        { text: "Account audit — kill duplicate Taskade", done: false }
+      ]
+    },
+    care: {
+      name: "Care — family, ritual, body",
+      emoji: "🌅",
+      sub: "Cook Tue + Sun. Sunrise meditate. Protect mornings.",
+      items: [
+        { text: "Tuesday cook — anticipate + buy ingredients", done: false },
+        { text: "Tuesday cook — prep + serve family of 4", done: false },
+        { text: "Sunday cook — anticipate + buy", done: false },
+        { text: "Sunday cook — prep + serve family of 4", done: false },
+        { text: "Sunrise + meditate (daily 6-7am)", done: false },
+        { text: "No meetings before 10am (protect deep work)", done: false },
+        { text: "Sunday review (7pm)", done: false }
+      ]
+    },
+    content: {
+      name: "Content — Crisis Dashboard + AFR + Social",
+      emoji: "📊",
+      sub: "Crisis Dashboard live. AI Family Room mid-build. LinkedIn cadence.",
+      items: [
+        { text: "Crisis Dashboard — verify Founding Class framing is current", done: false },
+        { text: "Replace Great Oaks GitHub sample with 'Thank you for the preview'", done: false },
+        { text: "AI Family Room — finish Phase 2/3 push", done: false },
+        { text: "AI Family Room — Google Sheet pipeline verified", done: false },
+        { text: "LinkedIn post Tue + Fri", done: false },
+        { text: "Justice is in the Details — next issue", done: false }
+      ]
+    }
+  },
+  xp: 0,
+  streak: 0,
+  lastCheckDate: null,
+  capitalRaised: 0,
+  recentWins: [
+    { text: "Cancelled duplicate Thinkific subscription — billing leak stopped", date: new Date().toLocaleDateString() },
+    { text: "Alpha-Bet Lead Brief v3 PDF rendered + ready to send", date: new Date().toLocaleDateString() },
+    { text: "4 app answers tightened against canonical numbers", date: new Date().toLocaleDateString() },
+    { text: "60-sec video script v2 drafted in measured tone", date: new Date().toLocaleDateString() },
+    { text: "Mil-spouse card v1 designed (print-ready PDF)", date: new Date().toLocaleDateString() },
+    { text: "Apps Script morning brief renamed + countdown block live", date: new Date().toLocaleDateString() },
+    { text: "Tracy 6/4 meeting located in calendar — RSVP'd yes", date: new Date().toLocaleDateString() }
+  ],
+  badges: [],
+  courtDeadlineDate: "",
+  petersburgShipDate: "",
+  alphaBetDeadline: "2026-06-18"
+};
+
+const INSPIRATIONS = [
+  "Build systems. Promote justice.",
+  "The infrastructure IS the intervention.",
+  "Sunrise first. The work waits.",
+  "Justice is in the details.",
+  "Frameworks, not vibes.",
+  "Court is the rhythm. Everything else flexes.",
+  "Leaders leave with something real in their hands.",
+  "Build sustainable systems, not isolated wins.",
+  "Stakeholder knowledge is the gap. You're closing it.",
+  "Knowledge is power. — Kofi Annan",
+  "Information is liberating. Build accordingly.",
+  "Education is the premise of progress.",
+  "What if achievement wasn't attached to zip code?",
+  "Audacious. Knowledge-driven. Real-time.",
+  "Ignite a revolution in public education.",
+  "All five tiers. All in one framework.",
+  "11.1M students waiting. Move."
+];
+const LOCATIONS = [
+  { id: "sunrise", label: "🌅 Sunrise" },
+  { id: "outside", label: "🌊 Outside" },
+  { id: "car", label: "🚗 Car" },
+  { id: "home", label: "🏠 Home" }
+];
+
+const AUDIO_LIBRARY = [
+  { name: "Alan Watts", mood: ["reset", "deep"] },
+  { name: "Oprah Motivation", mood: ["hype", "deep"] },
+  { name: "Steve Harvey Motivation", mood: ["hype"] },
+  { name: "Myles Munroe", mood: ["deep", "reset"] },
+  { name: "Diary of a CEO", mood: ["focus", "deep"] },
+  { name: "Lewis Howes", mood: ["focus", "hype"] },
+  { name: "National Park After Dark", mood: ["story"] },
+  { name: "This American Life", mood: ["story"] },
+  { name: "Angie Martinez IRL", mood: ["story", "hype"] },
+  { name: "Grits & Eggs ⭐", mood: ["focus", "hype"] },
+  { name: "Eric Thomas", mood: ["hype"] },
+  { name: "Mind Reset Frequencies", mood: ["reset"] }
+];
+// ====== SPARKS — Tyra's voice library (the nerdy Black girl who's been studying the knowledge leaks for a decade) ======
+const SPARKS = [
+  // identity / receipts
+  "30 years of leaks studied. This task closes one.",
+  "A decade brewing. Today it lands.",
+  "Talent + gift + study + this task = receipts.",
+  "The infrastructure IS the intervention.",
+  "Frameworks not vibes.",
+  "Smart, prepared, and on time. The triple threat.",
+  "She read the Harvard study AND the EPISD case file. She's the receipt.",
+  "Casio calculator energy. Trapper keeper precision.",
+  "30 years in. Still nerding out over the data.",
+  // community care
+  "The kids waiting on this don't know your name. Build anyway.",
+  "Knowledge leaks don't fix themselves. You're the patch.",
+  "Every system you build is a child caught.",
+  "This is what care looks like in code.",
+  "Community work is brick-by-brick. This is the brick.",
+  // ancestral / Black women's tradition
+  "Audre said your silence will not protect you. Build louder.",
+  "Toni: 'If you are free, free somebody else.' That's this.",
+  "We been building infrastructure forever. Today's yours.",
+  "Ancestors loaded the gun. You aim it.",
+  "Issa Rae would call this nerdy excellence. She'd be right.",
+  // strategic / EJC
+  "Court is the rhythm. Everything else flexes.",
+  "Petersburg is the proof point. Stack it.",
+  "Tier 1 first. VA + NC. Easy yes.",
+  "Sunrise first. The work waits.",
+  "Possibility Pilot move logged.",
+  "Build systems. Promote justice. ✓",
+  "Justice is in the details. So is this checkmark.",
+  "EJC isn't a brand. It's the receipts.",
+  // encouraging without sugar
+  "You don't have to prove you can do hard things. You ARE doing hard things.",
+  "Hard now. Pattern later.",
+  "Done > Perfect. Always.",
+  "Your dashboard remembers. Even when you don't.",
+  "Stop performing. Start systematizing.",
+  // hype voice
+  "Lewis Howes would tell you to celebrate this. Do it.",
+  "Eric Thomas voice: YOU. ARE. CLOSING. THE LOOP.",
+  "Steve Harvey confidence. Click the next one.",
+  "Oprah said: 'You become what you believe.' Different belief today.",
+  "Myles Munroe said die empty. You're doing the opposite — bringing it out.",
+  // momentum
+  "One more. The rhythm is on.",
+  "She's in the zone. Don't break it.",
+  "The dashboard is watching. So are the kids.",
+  "Possibility, pilot, move. One more.",
+  "Petersburg got this. So can the next district.",
+  "Florida-flat, NC-roots, multi-state-aim. Stack it.",
+  // affirmation thread
+  "This is the patch the system needs.",
+  "Your daughter is watching this discipline.",
+  "Charmain's calendar is yours now. Earn it.",
+  "Receipts > performance. Always.",
+  // STAKEHOLDER FRAMEWORK — her thesis
+  "Stakeholder knowledge IS the gap. You're closing it.",
+  "11.1 million students. One leak at a time.",
+  "Zip code shouldn't decide. You're proving it.",
+  "Tier 1, 2, 3, 4, 5. All five get the patch.",
+  "Audacious. Knowledge-driven. Built.",
+  "Ignite the revolution. One task at a time.",
+  "Real-time solutions for real challenges. Logged.",
+  "Knowledge is power. — Kofi Annan (and Tyra).",
+  "Information is liberating. So is this task.",
+  "Education is the premise of progress. You're the architect.",
+  "46% supt turnover. 80% board churn. 44% teacher exit. You're the antidote.",
+  "Stakeholder coherence. That's the work.",
+  "Unleash innate potential. Starts with this dashboard.",
+  "Forever transform the landscape. Brick by brick.",
+  "All-in-1 framework. All-in-1 day. Click."
+];
+
+const METER_DEFS = [
+  { id: "courage", emoji: "🔥", name: "Courage", sub: "Hold the line." },
+  { id: "focus",   emoji: "🎯", name: "Focus",   sub: "Stay in the seat." },
+  { id: "voice",   emoji: "🗣️", name: "Voice",   sub: "Show your name." },
+  { id: "care",    emoji: "🌅", name: "Care",    sub: "Tend the founder." },
+  { id: "capital", emoji: "💰", name: "Capital", sub: "Turn the work over." }
+];
+
+const AUDIO_MOODS = [
+  { id: "all", label: "All" },
+  { id: "hype", label: "🔥 Hype" },
+  { id: "focus", label: "🎯 Focus" },
+  { id: "deep", label: "🌊 Deep" },
+  { id: "story", label: "📖 Story" },
+  { id: "reset", label: "🧘 Reset" }
+];
+
+let state = loadState();
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return structuredClone(DEFAULT_STATE);
+    const parsed = JSON.parse(raw);
+    return Object.assign(structuredClone(DEFAULT_STATE), parsed);
+  } catch (e) {
+    return structuredClone(DEFAULT_STATE);
+  }
+}
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+// ============ COUNTDOWNS ============
+function daysBetween(a, b) {
+  const ms = b.getTime() - a.getTime();
+  return Math.ceil(ms / (1000 * 60 * 60 * 24));
+}
+function renderCountdowns() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const plan60End = new Date(2026, 7, 1);
+  const planStart = new Date(2026, 5, 2);
+  const alphaBet = state.alphaBetDeadline ? new Date(state.alphaBetDeadline + "T00:00:00") : null;
+  const courtDate = state.courtDeadlineDate ? new Date(state.courtDeadlineDate + "T00:00:00") : null;
+  const petersburgDate = state.petersburgShipDate ? new Date(state.petersburgShipDate + "T00:00:00") : null;
+
+  const daysIntoplan = daysBetween(planStart, today);
+  const planDays = daysBetween(today, plan60End);
+  const courtDays = courtDate ? daysBetween(today, courtDate) : null;
+  const abDays = alphaBet ? daysBetween(today, alphaBet) : null;
+  const pburgDays = petersburgDate ? daysBetween(today, petersburgDate) : null;
+
+  function block(opts) {
+    const cls = opts.critical ? 'critical' : (opts.warning ? 'warning' : (opts.progress ? 'progress' : ''));
+    const valueLine = opts.value === null
+      ? `<div class="value">—</div><div class="sub">${opts.empty}</div>`
+      : `<div class="value">${opts.value}<small>${opts.unit}</small></div><div class="sub">${opts.sub}</div>`;
+    const inputLine = opts.input || '';
+    return `<div class="countdown ${cls}" data-key="${opts.key||''}">
+      <div class="marker">${opts.marker}</div>
+      <div class="label">${opts.label}</div>
+      ${valueLine}
+      ${inputLine}
+    </div>`;
+  }
+
+  const courtBlock = block({
+    key: 'court',
+    marker: '⚠️',
+    label: 'Court · next deadline',
+    value: courtDays,
+    unit: 'days',
+    sub: courtDate ? courtDate.toLocaleDateString() + ' · click to edit' : '',
+    empty: `<div class="court-input"><input type="date" id="court-date-input" value="${state.courtDeadlineDate||''}" /></div>`,
+    critical: courtDays !== null && courtDays <= 7,
+    warning: courtDays !== null && courtDays <= 21 && courtDays > 7
+  });
+
+  const abBlock = block({
+    key: 'alphabet',
+    marker: '🏫',
+    label: 'Alpha-Bet App · deadline',
+    value: abDays,
+    unit: 'days',
+    sub: alphaBet ? alphaBet.toLocaleDateString() + ' · click to edit' : '',
+    empty: '',
+    critical: abDays !== null && abDays <= 7,
+    warning: abDays !== null && abDays <= 21 && abDays > 7
+  });
+
+  const pburgBlock = block({
+    key: 'petersburg',
+    marker: '🎯',
+    label: 'Petersburg · ship',
+    value: pburgDays,
+    unit: 'days',
+    sub: petersburgDate ? petersburgDate.toLocaleDateString() + ' · click to edit' : '',
+    empty: `<div class="court-input"><input type="date" id="petersburg-date-input" value="${state.petersburgShipDate||''}" /></div>`,
+    critical: pburgDays !== null && pburgDays <= 14,
+    warning: pburgDays !== null && pburgDays <= 30 && pburgDays > 14
+  });
+
+  const capitalPct = Math.round((state.capitalRaised / 75000) * 100);
+  const capBlock = `<div class="countdown progress">
+    <div class="marker">📊</div>
+    <div class="label">Capital · toward $75K</div>
+    <div class="value">${capitalPct}<small>%</small></div>
+    <div class="sub">$${state.capitalRaised.toLocaleString()} of $75,000 · Day ${daysIntoplan} of 60</div>
+  </div>`;
+
+  document.getElementById("countdown-strip").innerHTML = courtBlock + abBlock + pburgBlock + capBlock;
+
+  // listeners
+  const dateInputs = [
+    ['court-date-input', 'courtDeadlineDate'],
+    ['petersburg-date-input', 'petersburgShipDate']
+  ];
+  dateInputs.forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('change', e => { state[key] = e.target.value; saveState(); renderAll(); });
+  });
+  document.querySelectorAll('.countdown[data-key]').forEach(block => {
+    block.addEventListener('click', () => {
+      const k = block.dataset.key;
+      const map = { court:'courtDeadlineDate', petersburg:'petersburgShipDate', alphabet:'alphaBetDeadline' };
+      const key = map[k]; if (!key) return;
+      const cur = state[key] || '';
+      const next = prompt(`Set ${k} date (YYYY-MM-DD):`, cur);
+      if (next !== null) { state[key] = next; saveState(); renderAll(); }
+    });
+  });
+}
+
+// ============ TODAY'S 3 ============
+function renderTodaysThree() {
+  const list = document.getElementById("t3-list");
+  list.innerHTML = "";
+  while (state.todaysThree.length < 3) state.todaysThree.push({ text: "", lane: "legal", done: false });
+  state.todaysThree = state.todaysThree.slice(0, 3);
+
+  state.todaysThree.forEach((item, idx) => {
+    const key = `t3-${idx}`;
+    const subs = state.taskSubsteps[key] || [];
+    const row = document.createElement("div");
+    row.className = "t3-row" + (item.done ? " done" : "");
+    row.innerHTML = `
+      <input type="checkbox" ${item.done ? "checked" : ""} data-idx="${idx}" />
+      <input type="text" value="${escapeHtml(item.text)}" placeholder="Today's priority #${idx + 1}…" data-idx="${idx}" />
+      <span class="lane-tag ${item.lane}" data-idx="${idx}">${item.lane}</span>
+      <button class="break-btn" data-break="${key}" data-text="${escapeHtml(item.text)}">${subs.length ? 'Re-break' : 'Break it down'}</button>
+    `;
+    list.appendChild(row);
+    if (subs.length) {
+      const sw = document.createElement("div");
+      sw.className = "substeps";
+      sw.innerHTML = subs.map((s, si) => `
+        <div class="substep ${s.done ? 'done' : ''}">
+          <input type="checkbox" ${s.done ? 'checked' : ''} data-sub-key="${key}" data-sub-idx="${si}" />
+          <span>${escapeHtml(s.text)}</span>
+          <span class="micro-tag">5 min</span>
+        </div>
+      `).join('');
+      list.appendChild(sw);
+    }
+  });
+
+  list.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener("change", (e) => {
+      const idx = +e.target.dataset.idx;
+      const wasNotDone = !state.todaysThree[idx].done;
+      state.todaysThree[idx].done = e.target.checked;
+      if (e.target.checked && wasNotDone && state.todaysThree[idx].text.trim()) {
+        addXP(15); bumpStreak(); addWin(state.todaysThree[idx].text); checkBadges();
+        const rect = e.target.getBoundingClientRect();
+        const lane = state.todaysThree[idx].lane;
+        celebrate({ coordinate: [rect.left + 20, rect.top + 20], tags: LANE_DEFAULT_METERS[lane] || ['focus'], amount: 5, identityLine: "+1 Possibility Pilot move" });
+      }
+      saveState(); renderAll();
+    });
+  });
+  list.querySelectorAll('input[type="text"]').forEach(input => {
+    input.addEventListener("change", (e) => {
+      const idx = +e.target.dataset.idx;
+      state.todaysThree[idx].text = e.target.value;
+      saveState();
+    });
+  });
+  list.querySelectorAll('.lane-tag').forEach(tag => {
+    tag.addEventListener("click", (e) => {
+      const idx = +e.target.dataset.idx;
+      const lanes = ["legal", "business", "capital", "content"];
+      const cur = state.todaysThree[idx].lane;
+      state.todaysThree[idx].lane = lanes[(lanes.indexOf(cur) + 1) % lanes.length];
+      saveState(); renderTodaysThree();
+    });
+  });
+  list.querySelectorAll('.break-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const key = btn.dataset.break;
+      const text = btn.dataset.text;
+      if (!text || !text.trim()) { alert("Add task text first."); return; }
+      breakDownTask(text, key, btn);
+    });
+  });
+  list.querySelectorAll('input[type="checkbox"][data-sub-key]').forEach(cb => {
+    cb.addEventListener("change", (e) => {
+      const k = e.target.dataset.subKey;
+      const si = +e.target.dataset.subIdx;
+      const wasNotDone = !state.taskSubsteps[k][si].done;
+      state.taskSubsteps[k][si].done = e.target.checked;
+      if (e.target.checked && wasNotDone) {
+        addXP(5); bumpStreak();
+        const rect = e.target.getBoundingClientRect();
+        // map t3 key back to lane
+        let tags = ['focus'];
+        if (k.startsWith('t3-')) {
+          const tIdx = +k.split('-')[1];
+          tags = LANE_DEFAULT_METERS[state.todaysThree[tIdx]?.lane] || ['focus'];
+        } else if (k.startsWith('lane-')) {
+          const laneId = k.split('-')[1];
+          tags = LANE_DEFAULT_METERS[laneId] || ['focus'];
+        }
+        celebrate({ coordinate: [rect.left + 15, rect.top + 15], tags: tags, amount: 1, identityLine: "Substep done · the start was tiny" });
+      }
+      saveState(); renderAll();
+    });
+  });
+}
+
+// ============ LANES ============
+function renderLanes() {
+  const root = document.getElementById("lanes");
+  root.innerHTML = "";
+  Object.entries(state.lanes).forEach(([key, lane]) => {
+    const total = lane.items.length;
+    const done = lane.items.filter(i => i.done).length;
+    let healthClass = "green";
+    if (total > 0) {
+      const pct = done / total;
+      if (pct < 0.25) healthClass = "red";
+      else if (pct < 0.6) healthClass = "yellow";
+    }
+    const div = document.createElement("div");
+    div.className = `lane ${key}`;
+    div.innerHTML = `
+      <h3><span><span class="lane-emoji">${lane.emoji||''}</span>${lane.name}</span>
+        <span class="health ${healthClass}">${done}/${total}</span>
+      </h3>
+      <div class="lane-sub">${lane.sub}</div>
+      <ul>
+        ${lane.items.map((it, i) => {
+          const subKey = `lane-${key}-${i}`;
+          const subs = state.taskSubsteps[subKey] || [];
+          const subsHtml = subs.length ? `<div class="substeps">${subs.map((s, si) => `
+            <div class="substep ${s.done ? 'done' : ''}">
+              <input type="checkbox" ${s.done ? 'checked' : ''} data-sub-key="${subKey}" data-sub-idx="${si}" />
+              <span>${escapeHtml(s.text)}</span>
+              <span class="micro-tag">5 min</span>
+            </div>`).join('')}</div>` : '';
+          return `
+          <li class="${it.done ? 'done' : ''} ${subs.length ? 'has-subs' : ''}">
+            <div class="li-main">
+              <input type="checkbox" ${it.done ? 'checked' : ''} data-lane="${key}" data-idx="${i}" />
+              <span>${escapeHtml(it.text)}</span>
+              <button class="break-btn-sm" data-break="${subKey}" data-text="${escapeHtml(it.text)}">${subs.length ? 'Re-break' : 'Break ↓'}</button>
+            </div>
+            ${subsHtml}
+          </li>
+        `;
+        }).join('')}
+      </ul>
+      <div class="add">
+        <input type="text" placeholder="Add to ${key}…" data-lane="${key}" />
+        <button data-lane="${key}">Add</button>
+      </div>
+    `;
+    root.appendChild(div);
+  });
+
+  root.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener("change", (e) => {
+      const lane = e.target.dataset.lane;
+      const idx = +e.target.dataset.idx;
+      const wasNotDone = !state.lanes[lane].items[idx].done;
+      state.lanes[lane].items[idx].done = e.target.checked;
+      if (e.target.checked && wasNotDone) {
+        addXP(10); bumpStreak(); addWin(state.lanes[lane].items[idx].text); checkBadges();
+        const rect = e.target.getBoundingClientRect();
+        celebrate({ coordinate: [rect.left + 20, rect.top + 20], tags: LANE_DEFAULT_METERS[lane] || ['focus'], amount: 3, identityLine: "+1 logged · " + lane });
+      }
+      saveState(); renderAll();
+    });
+  });
+  root.querySelectorAll('.add button').forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      const lane = e.target.dataset.lane;
+      const input = e.target.previousElementSibling;
+      const text = input.value.trim();
+      if (!text) return;
+      state.lanes[lane].items.push({ text, done: false });
+      input.value = "";
+      saveState(); renderLanes();
+    });
+  });
+  root.querySelectorAll('.break-btn-sm').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const key = btn.dataset.break;
+      const text = btn.dataset.text;
+      if (!text || !text.trim()) return;
+      breakDownTask(text, key, btn);
+    });
+  });
+  root.querySelectorAll('input[type="checkbox"][data-sub-key]').forEach(cb => {
+    cb.addEventListener("change", (e) => {
+      const k = e.target.dataset.subKey;
+      const si = +e.target.dataset.subIdx;
+      const wasNotDone = !state.taskSubsteps[k][si].done;
+      state.taskSubsteps[k][si].done = e.target.checked;
+      if (e.target.checked && wasNotDone) {
+        addXP(5); bumpStreak();
+        const rect = e.target.getBoundingClientRect();
+        const laneId = k.split('-')[1];
+        celebrate({ coordinate: [rect.left + 15, rect.top + 15], tags: LANE_DEFAULT_METERS[laneId] || ['focus'], amount: 1, identityLine: "Substep done · the start was tiny" });
+      }
+      saveState(); renderAll();
+    });
+  });
+}
+
+// ============ XP / STREAK / WINS / BADGES ============
+function addXP(n) { state.xp += n; }
+function bumpStreak() {
+  const today = new Date().toDateString();
+  if (state.lastCheckDate !== today) {
+    const y = new Date(); y.setDate(y.getDate() - 1);
+    if (state.lastCheckDate === y.toDateString() || state.lastCheckDate === null) {
+      state.streak += 1;
+    } else {
+      state.streak = 1;
+    }
+    state.lastCheckDate = today;
+  }
+}
+function addWin(text) {
+  state.recentWins.unshift({ text, date: new Date().toLocaleDateString() });
+  state.recentWins = state.recentWins.slice(0, 10);
+}
+function renderXP() {
+  const levels = [0, 100, 250, 500, 850, 1300, 1900, 2600, 3500, 4600, 6000];
+  let level = 1;
+  for (let i = levels.length - 1; i >= 0; i--) {
+    if (state.xp >= levels[i]) { level = i + 1; break; }
+  }
+  const cur = levels[level - 1] || 0;
+  const next = levels[level] || (cur + 1000);
+  const pct = Math.min(100, ((state.xp - cur) / (next - cur)) * 100);
+  document.getElementById("xp-num").textContent = state.xp;
+  document.getElementById("xp-fill").style.width = pct + "%";
+  document.getElementById("streak-num").textContent = state.streak;
+  document.getElementById("capital-raised").textContent = "$" + state.capitalRaised.toLocaleString() + " raised";
+  const titles = ["Frame Setter", "Tier Closer", "Gap Patcher", "Knowledge Cascader", "Possibility Pilot", "Stakeholder Architect", "System Builder", "Justice Engineer", "Revolution Igniter", "Tide Maker", "Bridge Holder"];
+  document.getElementById("level-label").textContent = `Level ${level} · ${titles[level - 1] || "Possibility Pilot"}`;
+  // Sound toggle button state
+  const stBtn = document.getElementById("sound-toggle");
+  if (stBtn) { stBtn.classList.toggle("on", state.soundOn !== false); stBtn.textContent = state.soundOn !== false ? "🔊 SOUND ON" : "🔇 SOUND OFF"; }
+}
+const BADGE_DEFS = [
+  { id: "first-move", name: "First Move", check: () => state.xp >= 10 },
+  { id: "streak-week", name: "Streak Keeper · 7d", check: () => state.streak >= 7 },
+  { id: "court-discipline", name: "Court Discipline", check: () => state.lanes.legal.items.filter(i => i.done).length >= 3 },
+  { id: "wy-llc", name: "WY LLC Filed", check: () => state.lanes.business.items[0]?.done },
+  { id: "alphabet-shipped", name: "Alpha-Bet Submitted", check: () => state.lanes.capital.items.filter(i => i.done && /alpha-bet|alphabet/i.test(i.text)).length >= 1 },
+  { id: "petersburg-ship", name: "Petersburg Ship", check: () => state.lanes.capital.items.filter(i => i.done && /petersburg/i.test(i.text)).length >= 2 },
+  { id: "great-oaks-moved", name: "Great Oaks Mover", check: () => state.recentWins.some(w => /great oaks/i.test(w.text)) },
+  { id: "capital-mover", name: "Capital Mover", check: () => state.capitalRaised > 0 },
+  { id: "afr-shipped", name: "AFR Launched", check: () => state.lanes.content.items.filter(i => i.done && /family room/i.test(i.text)).length >= 1 }
+];
+function checkBadges() {
+  BADGE_DEFS.forEach(b => {
+    if (b.check() && !state.badges.includes(b.id)) state.badges.push(b.id);
+  });
+}
+function renderBadges() {
+  document.getElementById("badges").innerHTML = BADGE_DEFS.map(b => {
+    const earned = state.badges.includes(b.id);
+    return `<span class="badge ${earned ? 'earned' : ''}">${b.name}</span>`;
+  }).join('');
+}
+
+// ============ SLIPPED + WINS ============
+function renderSlipped() {
+  const list = document.getElementById("slipped-list");
+  const slipped = [];
+  Object.entries(state.lanes).forEach(([key, lane]) => {
+    lane.items.filter(i => !i.done).slice(0, 2).forEach(i => {
+      slipped.push(`<li><b>${key}</b> · ${escapeHtml(i.text)}</li>`);
+    });
+  });
+  list.innerHTML = slipped.length ? slipped.slice(0, 6).join('') : '<div class="empty">Nothing slipped. Keep going.</div>';
+}
+function renderWins() {
+  const list = document.getElementById("wins-list");
+  list.innerHTML = state.recentWins.length
+    ? state.recentWins.slice(0, 6).map(w => `<li>${escapeHtml(w.text)} <small>· ${w.date}</small></li>`).join('')
+    : '<div class="empty">Complete something. The list awaits.</div>';
+}
+
+// ============ FEEDBACK SYSTEM — confetti, sound, toast, sparks ============
+function playPop() {
+  if (!state.soundOn) return;
+  try {
+    const ctx = window.__audioCtx || (window.__audioCtx = new (window.AudioContext || window.webkitAudioContext)());
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = "sine";
+    o.frequency.setValueAtTime(680, ctx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.08);
+    g.gain.setValueAtTime(0.001, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+    o.start(); o.stop(ctx.currentTime + 0.2);
+  } catch (e) {}
+}
+
+const _confettiColors = ['#1ABCB0', '#F28C38', '#9B8AFA', '#34C78A', '#F2A53E', '#0D6B64'];
+function fireConfetti(x, y) {
+  const canvas = document.getElementById("confetti-canvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const particles = [];
+  for (let i = 0; i < 36; i++) {
+    particles.push({
+      x: x || window.innerWidth / 2,
+      y: y || window.innerHeight / 2,
+      vx: (Math.random() - 0.5) * 14,
+      vy: -Math.random() * 12 - 4,
+      g: 0.35,
+      size: Math.random() * 6 + 3,
+      color: _confettiColors[Math.floor(Math.random() * _confettiColors.length)],
+      rot: Math.random() * Math.PI * 2,
+      vr: (Math.random() - 0.5) * 0.3,
+      life: 0
+    });
+  }
+  function tick() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = false;
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.vy += p.g; p.rot += p.vr; p.life++;
+      if (p.life < 80 && p.y < canvas.height + 20) {
+        alive = true;
+        ctx.save();
+        ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = Math.max(0, 1 - p.life / 80);
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+        ctx.restore();
+      }
+    });
+    if (alive) requestAnimationFrame(tick); else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  tick();
+}
+
+function toast(text, type, eyebrow) {
+  const stack = document.getElementById("toast-stack");
+  if (!stack) return;
+  const el = document.createElement("div");
+  el.className = "toast " + (type || "meter");
+  el.innerHTML = (eyebrow ? `<span class="t-meta">${escapeHtml(eyebrow)}</span>` : '') + escapeHtml(text);
+  stack.appendChild(el);
+  setTimeout(() => el.remove(), 5400);
+}
+
+function maybeSpark() {
+  // 1-in-3 chance on each completion (frequent enough for ADHD, not constant)
+  if (Math.random() < 0.34) {
+    const spark = SPARKS[Math.floor(Math.random() * SPARKS.length)];
+    toast(spark, "spark", "✨ Spark");
+  }
+}
+
+function bumpMeters(tags, amount) {
+  if (!state.meters) state.meters = { courage: 0, focus: 0, voice: 0, care: 0, capital: 0 };
+  const list = Array.isArray(tags) ? tags : (tags ? [tags] : []);
+  const bumps = [];
+  list.forEach(t => {
+    if (state.meters[t] !== undefined) {
+      state.meters[t] += amount;
+      const def = METER_DEFS.find(m => m.id === t);
+      if (def) bumps.push(`${def.emoji} ${def.name} +${amount}`);
+    }
+  });
+  if (bumps.length) toast(bumps.join(' · '), "meter", "Meters moved");
+}
+
+// Lane → meter mapping (used when a task doesn't have explicit meter tags)
+const LANE_DEFAULT_METERS = {
+  legal: ['courage', 'focus'],
+  business: ['courage', 'capital'],
+  capital: ['capital', 'voice'],
+  content: ['voice', 'focus']
+};
+
+function celebrate(opts) {
+  // opts: { coordinate: [x,y], tags: ['focus','care'], amount: 5, identityLine: "+1 Possibility Pilot move" }
+  playPop();
+  fireConfetti(opts.coordinate?.[0], opts.coordinate?.[1]);
+  if (opts.identityLine) toast(opts.identityLine, "meter", "Logged");
+  if (opts.tags && opts.tags.length) bumpMeters(opts.tags, opts.amount || 3);
+  maybeSpark();
+}
+
+// ============ UNLOCK LADDER — action gates depth ============
+const UNLOCK_TIERS = [
+  { n: 1, name: "Audio Fuel" },
+  { n: 3, name: "Countdowns + This Week" },
+  { n: 5, name: "Lanes + Wins + Slipped" },
+  { n: 7, name: "Quick Actions + Badges" }
+];
+function todaysCheckCount() {
+  const today = new Date().toDateString();
+  if (state.unlockDate !== today) {
+    state.unlockDate = today;
+    state.unlockedThisDay = [];
+    saveState();
+  }
+  let count = 0;
+  state.todaysThree.forEach(t => { if (t.done) count++; });
+  Object.values(state.taskSubsteps || {}).forEach(arr => {
+    arr.forEach(s => { if (s.done) count++; });
+  });
+  Object.values(state.lanes).forEach(lane => {
+    lane.items.forEach(i => { if (i.done) count++; });
+  });
+  if (state.streak >= 3) count = Math.max(count, 7);
+  return count;
+}
+function updateUnlocks() {
+  const count = todaysCheckCount();
+  if (!state.unlockedThisDay) state.unlockedThisDay = [];
+  document.querySelectorAll('.gate[data-unlock]').forEach(el => {
+    const need = +el.dataset.unlock;
+    if (count >= need) el.classList.add('unlocked');
+  });
+  UNLOCK_TIERS.forEach(t => {
+    if (count >= t.n && !state.unlockedThisDay.includes(t.n)) {
+      state.unlockedThisDay.push(t.n);
+      toast(`${t.name} unlocked.`, "meter", "🔓 New layer");
+      saveState();
+    }
+  });
+  const uhCount = document.getElementById("uh-count");
+  const uhMsg = document.getElementById("uh-msg");
+  if (uhCount && uhMsg) {
+    uhCount.textContent = `Today: ${count} ${count === 1 ? 'check' : 'checks'}`;
+    const next = UNLOCK_TIERS.find(t => count < t.n);
+    if (next) {
+      uhMsg.innerHTML = `<b>${next.name}</b> unlocks at ${next.n} ${next.n === 1 ? 'check' : 'checks'}. ${next.n - count} to go.`;
+    } else {
+      uhMsg.innerHTML = `All layers open. Close Today's 3 to earn the daily medal.`;
+    }
+  }
+}
+
+function updateRitual() {
+  const card = document.getElementById("ritual-card");
+  if (!card) return;
+  const now = new Date();
+  const day = now.getDay();
+  const h = now.getHours(); const m = now.getMinutes();
+  const inSunrise = (h === 5 && m >= 30) || h === 6 || (h === 7 && m <= 30);
+  const inSunday = day === 0 && h >= 18 && h <= 21;
+  const eyebrow = document.getElementById("r-eyebrow");
+  if (inSunrise || inSunday) {
+    card.classList.add("show");
+    if (eyebrow) eyebrow.textContent = inSunrise ? "🌅 Sunrise window — meditation + thesis" : "📋 Sunday review — anchor the week";
+  } else {
+    card.classList.remove("show");
+  }
+  const exp = document.getElementById("r-expand");
+  const tiers = document.getElementById("r-tiers");
+  if (exp && tiers && !exp.dataset.bound) {
+    exp.dataset.bound = "1";
+    exp.addEventListener('click', () => {
+      tiers.classList.toggle('show');
+      exp.textContent = tiers.classList.contains('show') ? "Collapse ↑" : "See the framework ↓";
+    });
+  }
+}
+
+// Sound toggle
+document.getElementById("sound-toggle").addEventListener("click", () => {
+  state.soundOn = !state.soundOn;
+  const btn = document.getElementById("sound-toggle");
+  btn.textContent = state.soundOn ? "🔊 SOUND ON" : "🔇 SOUND OFF";
+  btn.classList.toggle("on", state.soundOn);
+  saveState();
+});
+
+// ============ WHERE-DO-I-START button ============
+document.getElementById("start-button").addEventListener("click", async () => {
+  const btn = document.getElementById("start-button");
+  const result = document.getElementById("start-result");
+  btn.classList.add("thinking");
+  btn.querySelector('.sb-l span:last-child').textContent = "Thinking…";
+  const all = [];
+  state.todaysThree.filter(t => !t.done && t.text.trim()).forEach(t => all.push(`[Today's 3 · ${t.lane}] ${t.text}`));
+  Object.entries(state.lanes).forEach(([k, lane]) => {
+    lane.items.filter(i => !i.done).forEach(i => all.push(`[${k}] ${i.text}`));
+  });
+  try {
+    const reply = await window.cowork.askClaude(
+      `Tyra Harrison has ADHD and is overwhelmed staring at her dashboard. From this list of open tasks, pick the ONE that gives her the smallest possible 5-minute physical first action she can do RIGHT NOW. Return: (1) the chosen task in <b>bold</b>, (2) the 5-minute action as a single sentence starting with a verb, (3) no preamble, no apologies, no list. Voice: peer-to-peer, calm authority, no sugar. Tasks: ${all.slice(0, 30).join(' | ')}`,
+      []
+    );
+    result.innerHTML = reply;
+    result.classList.add('show');
+    btn.querySelector('.sb-l span:last-child').textContent = "Where do I start right now?";
+    btn.classList.remove("thinking");
+    playPop();
+  } catch (e) {
+    result.textContent = "Ask in chat: 'Where do I start? Pick one task and a 5-minute action.'";
+    result.classList.add('show');
+    btn.querySelector('.sb-l span:last-child').textContent = "Where do I start right now?";
+    btn.classList.remove("thinking");
+  }
+});
+
+// ============ BREAK-IT-DOWN — populate substeps for any task ============
+async function breakDownTask(taskText, key, btn) {
+  if (btn) { btn.classList.add('thinking'); btn.textContent = 'Thinking…'; }
+  try {
+    const reply = await window.cowork.askClaude(
+      `Break this task into 3-5 specific 5-minute physical actions for someone with ADHD. Each action starts with a verb. NO preamble, NO numbering, NO bullets. Return one action per line. Task: "${taskText}"`,
+      []
+    );
+    const lines = String(reply).split('\n').map(l => l.replace(/^[\s\-\*\d\.\)]+/, '').trim()).filter(l => l.length > 0).slice(0, 6);
+    state.taskSubsteps[key] = lines.map(t => ({ text: t, done: false }));
+    saveState(); renderAll();
+  } catch (e) {
+    alert("Couldn't break this down. Ask in chat: 'Break into 5-minute actions: " + taskText + "'");
+    if (btn) { btn.classList.remove('thinking'); btn.textContent = 'Break it down'; }
+  }
+}
+
+document.getElementById("reset-day-btn").addEventListener("click", () => {
+  if (!confirm("Reset Today's 3? (XP and streak stay.)")) return;
+  state.todaysThree = state.todaysThree.map(t => ({ ...t, done: false }));
+  saveState(); renderAll();
+});
+
+// QUICK ACTIONS
+document.querySelectorAll('.quicklinks button[data-prompt]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const prompt = btn.dataset.prompt;
+    navigator.clipboard.writeText(prompt).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = "✓ Copied — paste in chat";
+      setTimeout(() => btn.textContent = orig, 2000);
+    });
+  });
+});
+
+// ============ INIT ============
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+}
+// ============ RHYTHM + WEEK ============
+function renderRhythm() {
+  const pillsRoot = document.getElementById("loc-pills");
+  if (pillsRoot) {
+    pillsRoot.innerHTML = LOCATIONS.map(l =>
+      `<button class="loc-pill ${state.todaysLocation === l.id ? 'active' : ''}" data-loc="${l.id}">${l.label}</button>`
+    ).join('');
+    pillsRoot.querySelectorAll('.loc-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.todaysLocation = state.todaysLocation === btn.dataset.loc ? "" : btn.dataset.loc;
+        saveState(); renderRhythm();
+      });
+    });
+  }
+  const insp = document.getElementById("inspire-line");
+  if (insp) {
+    if (typeof state.inspireIdx !== 'number') state.inspireIdx = 0;
+    insp.textContent = INSPIRATIONS[state.inspireIdx % INSPIRATIONS.length];
+    insp.style.cursor = 'pointer';
+    insp.title = 'Click to rotate inspiration';
+    insp.onclick = () => { state.inspireIdx = (state.inspireIdx + 1) % INSPIRATIONS.length; saveState(); renderRhythm(); };
+  }
+}
+function renderAudio() {
+  const moodRoot = document.getElementById("audio-mood");
+  const showsRoot = document.getElementById("audio-shows");
+  const nowRoot = document.getElementById("audio-now");
+  if (!moodRoot || !showsRoot) return;
+  if (!state.audioMood) state.audioMood = "all";
+  moodRoot.innerHTML = AUDIO_MOODS.map(m =>
+    `<button class="${state.audioMood === m.id ? 'active' : ''}" data-mood="${m.id}">${m.label}</button>`
+  ).join('');
+  moodRoot.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    state.audioMood = b.dataset.mood; saveState(); renderAudio();
+  }));
+  const filtered = state.audioMood === "all"
+    ? AUDIO_LIBRARY
+    : AUDIO_LIBRARY.filter(s => s.mood.includes(state.audioMood));
+  showsRoot.innerHTML = filtered.map(s =>
+    `<button class="audio-show ${state.nowPlaying === s.name ? 'playing' : ''}" data-show="${escapeHtml(s.name)}">${escapeHtml(s.name)}</button>`
+  ).join('');
+  showsRoot.querySelectorAll('.audio-show').forEach(b => b.addEventListener('click', () => {
+    const name = b.dataset.show;
+    state.nowPlaying = state.nowPlaying === name ? "" : name;
+    saveState(); renderAudio();
+  }));
+  nowRoot.innerHTML = state.nowPlaying
+    ? `Now playing<br><b>${escapeHtml(state.nowPlaying)}</b>`
+    : `Pick what fuels<br>today`;
+}
+
+function renderWeek() {
+  const root = document.getElementById("week-strip");
+  if (!root) return;
+  if (!state.thisWeek || !state.thisWeek.length) {
+    root.innerHTML = '<div class="empty">No anchors logged this week.</div>';
+    return;
+  }
+  root.innerHTML = state.thisWeek.map(e => `
+    <div class="week-row">
+      <div class="week-date">${escapeHtml(e.date)}</div>
+      <div class="week-time">${escapeHtml(e.time)}</div>
+      <div class="week-title">${escapeHtml(e.title)}</div>
+      ${e.link ? `<a class="week-link" href="${escapeHtml(e.link)}" target="_blank" rel="noopener">Open</a>` : ''}
+    </div>
+  `).join('');
+}
+
+function renderAll() {
+  document.getElementById("today-date").textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  renderRhythm();
+  if (typeof renderAudio === 'function') renderAudio();
+  renderWeek();
+  renderCountdowns();
+  renderTodaysThree();
+  renderLanes();
+  renderXP();
+  renderSlipped();
+  renderWins();
+  renderBadges();
+  if (typeof updateUnlocks === 'function') updateUnlocks();
+  if (typeof updateRitual === 'function') updateRitual();
+}
+setInterval(() => { if (typeof updateRitual === 'function') updateRitual(); }, 60000);
+renderAll();
+</script>
+</body>
+</html>
