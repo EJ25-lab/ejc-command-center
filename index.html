@@ -204,16 +204,17 @@
   footer { background: var(--dark); color: var(--teal); font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-align: center; padding: 12px; margin: 40px -32px -80px; text-transform: uppercase; }
 
   /* DAILY RHYTHM RIBBON */
-  .rhythm { display: grid; grid-template-columns: auto 1fr auto; gap: 20px; align-items: center; padding: 16px 22px; background: linear-gradient(95deg, var(--teal-pale) 0%, var(--off) 100%); border: 1px solid var(--teal); border-radius: 14px; margin-bottom: 26px; }
-  .rhythm .ritual { display: flex; gap: 18px; font-size: 13px; color: var(--text); font-weight: 500; flex-wrap: wrap; }
+  .rhythm { display: flex; flex-direction: column; gap: 14px; padding: 20px 24px; background: linear-gradient(180deg, var(--teal-pale) 0%, var(--off) 100%); border: 1px solid var(--teal); border-radius: 14px; margin-bottom: 26px; }
+  .rhythm .ritual { display: flex; gap: 20px; font-size: 14.5px; color: var(--text); font-weight: 500; flex-wrap: wrap; align-items: center; }
   .rhythm .ritual span { display: inline-flex; align-items: center; gap: 6px; }
   .rhythm .ritual b { font-weight: 700; color: var(--teal-deep); }
-  .rhythm .loc-label { font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mid); margin-right: 4px; }
-  .rhythm .loc-pills { display: flex; gap: 6px; }
-  .rhythm .loc-pill { font-family: var(--font); font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 100px; background: var(--white); border: 1.5px solid var(--warm); color: var(--mid); cursor: pointer; transition: all 0.15s; }
+  .rhythm .inspire { font-family: var(--font); font-style: italic; font-size: 15px; color: var(--teal-deep); font-weight: 600; line-height: 1.5; padding: 10px 16px; background: rgba(255,255,255,0.5); border-left: 3px solid var(--teal); border-radius: 6px; }
+  .rhythm .loc-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-top: 4px; border-top: 1px dashed rgba(26,188,176,0.25); }
+  .rhythm .loc-label { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mid); flex-shrink: 0; }
+  .rhythm .loc-pills { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
+  .rhythm .loc-pill { font-family: var(--font); font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 100px; background: var(--white); border: 1.5px solid var(--warm); color: var(--mid); cursor: pointer; transition: all 0.15s; }
   .rhythm .loc-pill:hover { border-color: var(--teal); color: var(--teal-deep); }
   .rhythm .loc-pill.active { background: var(--teal); color: var(--white); border-color: var(--teal-dark); font-weight: 700; }
-  .rhythm .inspire { font-family: var(--font); font-style: italic; font-size: 13px; color: var(--teal-deep); font-weight: 500; max-width: 320px; line-height: 1.45; }
 
   /* LIFE METERS — multi-axis dopamine */
   .meters-wrap { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 26px; }
@@ -603,7 +604,7 @@
     <span>🚗 <b>Car</b> brain resets</span>
   </div>
   <div class="inspire" id="inspire-line">Build systems. Promote justice.</div>
-  <div>
+  <div class="loc-row">
     <div class="loc-label">Today I'm at</div>
     <div class="loc-pills" id="loc-pills"></div>
   </div>
