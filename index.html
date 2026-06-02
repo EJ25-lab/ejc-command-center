@@ -243,6 +243,54 @@
   .sound-toggle { position: fixed; top: 14px; right: 14px; z-index: 100; background: var(--white); border: 1px solid var(--warm); border-radius: 100px; padding: 6px 12px; font-family: var(--font); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: var(--mid); cursor: pointer; }
   .sound-toggle.on { background: var(--teal); color: var(--white); border-color: var(--teal-dark); }
 
+  /* GROWTH ACROSS SECTORS — 7-day sparklines per lane */
+  .growth-wrap { background: var(--white); border: 1px solid var(--warm); border-radius: 12px; padding: 18px 20px; margin-bottom: 26px; }
+  .growth-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1.5px solid var(--teal); }
+  .growth-head h2 { font-size: 1.05rem; font-weight: 700; color: var(--teal-deep); }
+  .growth-head .hint { font-size: 12px; color: var(--mid); }
+  .growth-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+  .sector { background: var(--off); border: 1px solid var(--warm); border-radius: 10px; padding: 12px 14px; transition: border-color 0.15s; }
+  .sector:hover { border-color: var(--teal); }
+  .sector .s-head { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: var(--mid); margin-bottom: 6px; line-height: 1.3; }
+  .sector .s-val { font-size: 1.4rem; font-weight: 800; color: var(--text); line-height: 1; letter-spacing: -0.02em; display: flex; align-items: baseline; gap: 6px; }
+  .sector .s-delta { font-size: 16px; font-weight: 800; }
+  .sector .s-delta.up { color: var(--green-dk); }
+  .sector .s-delta.flat { color: var(--mid); }
+  .sector .s-delta.down { color: var(--orange-dk); }
+  .sector .s-spark { display: block; height: 22px; width: 100%; margin: 6px 0 2px; color: var(--teal); }
+  .sector .s-label { font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--light); }
+  .sector.legal { border-left: 3px solid var(--orange-dk); }
+  .sector.legal .s-spark { color: var(--orange-dk); }
+  .sector.business { border-left: 3px solid var(--teal); }
+  .sector.business .s-spark { color: var(--teal); }
+  .sector.capital { border-left: 3px solid var(--green-dk); }
+  .sector.capital .s-spark { color: var(--green-dk); }
+  .sector.money { border-left: 3px solid var(--green); }
+  .sector.money .s-spark { color: var(--green-dk); }
+  .sector.content { border-left: 3px solid var(--purple-dk); }
+  .sector.content .s-spark { color: var(--purple); }
+  .sector.care { border-left: 3px solid #c87a3e; }
+  .sector.care .s-spark { color: #c87a3e; }
+
+  /* TREAT ENGINE — one curated reward, not a buffet */
+  .treat-strip { background: linear-gradient(95deg, #fff5e6 0%, #ffefee 100%); border: 1.5px solid var(--orange); border-radius: 14px; padding: 18px 22px; margin-bottom: 26px; display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center; }
+  .treat-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--orange-dk); margin-bottom: 6px; }
+  .treat-text { font-size: 14px; line-height: 1.5; color: var(--text); font-weight: 500; }
+  .treat-text b { color: var(--orange-dk); font-weight: 700; }
+  .treat-text .why { font-size: 11px; color: var(--mid); font-style: italic; display: block; margin-top: 4px; }
+  .treat-btn { font-family: var(--font); background: var(--orange); color: var(--white); border: none; border-radius: 100px; padding: 10px 20px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; cursor: pointer; text-transform: uppercase; transition: all 0.15s; }
+  .treat-btn:hover { background: var(--orange-dk); transform: translateY(-1px); }
+
+  /* FINANCE WINS surface */
+  .finance-strip { background: var(--green-pal); border: 1px solid var(--green); border-left: 3px solid var(--green-dk); border-radius: 12px; padding: 16px 20px; margin-bottom: 26px; }
+  .finance-strip .f-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--green-dk); margin-bottom: 10px; }
+  .finance-strip .f-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+  .finance-strip .f-card { background: var(--white); border-radius: 8px; padding: 10px 12px; font-size: 12px; line-height: 1.4; color: var(--text); }
+  .finance-strip .f-card b { color: var(--green-dk); display: block; font-size: 13px; margin-bottom: 2px; }
+  .finance-strip .f-add { display: flex; gap: 6px; margin-top: 10px; }
+  .finance-strip .f-add input { flex: 1; font-family: var(--font); border: 1px solid var(--warm); border-radius: 6px; padding: 7px 10px; font-size: 12px; }
+  .finance-strip .f-add button { font-family: var(--font); background: var(--green-dk); color: var(--white); border: none; border-radius: 6px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
+
   /* AUDIO FUEL */
   .audio-strip { background: var(--white); border: 1px solid var(--warm); border-left: 3px solid var(--purple); border-radius: 12px; padding: 16px 20px; margin-bottom: 26px; display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; }
   .audio-mood { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -317,6 +365,40 @@
     <div class="r-tier"><b>T4</b> <span>Parent & Community Partners — resources to build knowledge of standards + how to support</span></div>
     <div class="r-tier"><b>T5</b> <span>School Level Personnel — expertise in designing + implementing differentiated instruction</span></div>
     <div class="r-kofi">"Knowledge is power. Information is liberating. Education is the premise of progress, in every society, in every family." — Kofi Annan</div>
+  </div>
+</div>
+
+<!-- GROWTH ACROSS SECTORS — gated tier 1, 7-day movement per lane -->
+<div class="gate has-margin" data-unlock="1">
+  <div class="growth-wrap">
+    <div class="growth-head">
+      <h2>📈 Growth across sectors</h2>
+      <span class="hint">7-day movement. ↑ growing · → flat · ↓ slowing.</span>
+    </div>
+    <div class="growth-grid" id="growth-grid"></div>
+  </div>
+</div>
+
+<!-- FINANCE WINS — gated tier 1, celebrating the cleanup -->
+<div class="gate has-margin" data-unlock="1">
+  <div class="finance-strip">
+    <div class="f-eyebrow">💰 Finance — this month's cleanup wins</div>
+    <div class="f-grid" id="finance-grid"></div>
+    <div class="f-add">
+      <input type="text" id="finance-input" placeholder="Add a finance win you cleaned up…" />
+      <button id="finance-add">Log win</button>
+    </div>
+  </div>
+</div>
+
+<!-- TREAT ENGINE — gated tier 1, one curated reward, no buffet -->
+<div class="gate has-margin" data-unlock="1">
+  <div class="treat-strip">
+    <div>
+      <div class="treat-eyebrow">🎁 Treat yourself — non-monetary, curated, one tap</div>
+      <div class="treat-text" id="treat-text"><b>Tap the button.</b> No scrolling, no choice paralysis — one thing picked for you.</div>
+    </div>
+    <button class="treat-btn" id="treat-btn">Give me one</button>
   </div>
 </div>
 
@@ -484,6 +566,10 @@ const DEFAULT_STATE = {
   inspireIdx: 0,
   soundOn: true,
   meters: { courage: 0, focus: 0, voice: 0, care: 0, capital: 0 },
+  financeWins: [
+    { title: "Cancelled duplicate Thinkific", note: "Billing leak stopped" },
+    { title: "Great month of cleanup", note: "Multiple accounts reconciled" }
+  ],
   taskSubsteps: {
     "lane-legal-0": [
       { text: "Open /Desktop/Soft Copy EPISD files/Case Organization Guide.md — anchor", done: false },
@@ -544,7 +630,7 @@ const DEFAULT_STATE = {
       ]
     },
     business: {
-      name: "Business — WY LLC + Email Transition + State List",
+      name: "Business — WY LLC + Email + EJC Site + Brand",
       emoji: "🏛️",
       sub: "Tier 1 states: VA + NC. Tier 2: GA + SC.",
       items: [
@@ -552,7 +638,23 @@ const DEFAULT_STATE = {
         { text: "Email transition runbook — start 7-day cutover", done: false },
         { text: "Capability statement updated to new entity name", done: false },
         { text: "FL registered agent confirmed", done: false },
-        { text: "SAM.gov registration for federal grants", done: false }
+        { text: "SAM.gov registration for federal grants", done: false },
+        { text: "EJC site nav — hide Real Solutions FAST / Parents & Community / Family & Friends Support from Looka nav", done: false },
+        { text: "drpt-sample — verify VA eVA submission status", done: false }
+      ]
+    },
+    money: {
+      name: "Money — personal finance + Saint Salty + cleanup",
+      emoji: "💰",
+      sub: "Your money brain. Saint Salty income, account cleanup, taxes.",
+      items: [
+        { text: "Saint Salty Airbnb — pull full reservation history from host dashboard", done: false },
+        { text: "Saint Salty — reconcile 2025 + 2026 host payouts ($38K+ tracked)", done: false },
+        { text: "Account audit — kill duplicate Taskade", done: false },
+        { text: "Quarterly tax estimate — prep + send to CPA", done: false },
+        { text: "Personal credit cards — list balances + payoff order", done: false },
+        { text: "LBH Properties Navassa — financing milestones (USDA 502, NCHFA)", done: false },
+        { text: "Bank account update for new WY LLC entity (when LLC formed)", done: false }
       ]
     },
     capital: {
@@ -576,7 +678,8 @@ const DEFAULT_STATE = {
         { text: "Bev Britt VDOE — 14-day light touch", done: false },
         { text: "Oshkosh OASD — Governance Lab board packet next step", done: false },
         { text: "Pick ONE grant target via ejc-bid-response", done: false },
-        { text: "Account audit — kill duplicate Taskade", done: false }
+        { text: "FL DCF Workforce Leadership Dev — verify deadline + assess", done: false },
+        { text: "Weekly lead-pull scheduled task — review last run + act", done: false }
       ]
     },
     care: {
@@ -739,6 +842,34 @@ const SPARKS = [
   "Unleash innate potential. Starts with this dashboard.",
   "Forever transform the landscape. Brick by brick.",
   "All-in-1 framework. All-in-1 day. Click."
+];
+
+// ====== TREAT ENGINE — one curated reward, never a buffet ======
+const TREATS = [
+  { type: 'walk', icon: '🚶🏾‍♀️', text: '10-min walk outside. Phone in pocket.', why: 'reset the brain stem' },
+  { type: 'walk', icon: '🌊', text: 'Walk to the water. Stand. Don\'t do anything.', why: 'when the mind is racing' },
+  { type: 'walk', icon: '🌤️', text: 'Walk the block once + voice-memo one idea.', why: 'capture without overthinking' },
+  { type: 'walk', icon: '🌳', text: 'Walk to a tree you can sit under. Sit under it.', why: 'free, slow, sufficient' },
+  { type: 'walk', icon: '🥾', text: 'Park the laptop. 15 minutes outside, no destination.', why: 'pattern-break the block' },
+  { type: 'audio', icon: '🔥', text: 'Eric Thomas — 5-min fire. Any episode.', why: 'when you need lit' },
+  { type: 'audio', icon: '🌌', text: 'Alan Watts — Meaning of Effort (~12 min).', why: 'when you need calm reset' },
+  { type: 'audio', icon: '🎙️', text: 'Diary of a CEO — latest founder pivot episode.', why: 'company strategy fuel' },
+  { type: 'audio', icon: '🍳', text: 'Grits & Eggs — latest episode.', why: 'laugh + learn' },
+  { type: 'audio', icon: '🧘🏾‍♀️', text: 'Mind reset frequency — 5 minutes.', why: 'overstimulated, need still' },
+  { type: 'audio', icon: '📖', text: 'This American Life — first episode you see, no pre-pick.', why: 'when you need story' },
+  { type: 'audio', icon: '💃🏾', text: 'Angie Martinez IRL — latest.', why: 'long drive, long task' },
+  { type: 'audio', icon: '🌅', text: 'Oprah motivation — 1 clip.', why: 'when you need a soft yes' },
+  { type: 'audio', icon: '🎤', text: 'Steve Harvey morning motivation — 1 clip.', why: 'when you need a hard yes' },
+  { type: 'audio', icon: '🕊️', text: 'Myles Munroe — purpose talk, 10 min.', why: 'when you need anchored why' },
+  { type: 'video', icon: '🎥', text: 'Lewis Howes — pick one founder interview.', why: 'vision fuel' },
+  { type: 'video', icon: '🌲', text: 'National Park After Dark — latest.', why: 'good company on long task' },
+  { type: 'body', icon: '🌬️', text: '3 box breaths. 30 seconds. Right now.', why: 'fastest reset available' },
+  { type: 'body', icon: '🍵', text: 'Make tea. Don\'t multitask. Watch it steep.', why: 'when you need stillness' },
+  { type: 'body', icon: '👁️', text: 'Look at something 20 feet away for 20 seconds.', why: 'screen + eye reset' },
+  { type: 'body', icon: '🪟', text: 'Step outside. Look at the sky. 60 seconds.', why: 'reorient' },
+  { type: 'creative', icon: '📝', text: 'Voice memo: one thing that\'s working right now.', why: 'lock in a win' },
+  { type: 'creative', icon: '☎️', text: 'Text someone you love. One sentence.', why: 'community reset' },
+  { type: 'creative', icon: '🎵', text: 'Play one song loud. No skipping.', why: 'whole-body break' }
 ];
 
 const METER_DEFS = [
@@ -916,6 +1047,7 @@ function renderTodaysThree() {
         addXP(15); bumpStreak(); addWin(state.todaysThree[idx].text); checkBadges();
         const rect = e.target.getBoundingClientRect();
         const lane = state.todaysThree[idx].lane;
+        bumpHistory(lane);
         celebrate({ coordinate: [rect.left + 20, rect.top + 20], tags: LANE_DEFAULT_METERS[lane] || ['focus'], amount: 5, identityLine: "+1 Possibility Pilot move" });
       }
       saveState(); renderAll();
@@ -1028,6 +1160,7 @@ function renderLanes() {
       state.lanes[lane].items[idx].done = e.target.checked;
       if (e.target.checked && wasNotDone) {
         addXP(10); bumpStreak(); addWin(state.lanes[lane].items[idx].text); checkBadges();
+        bumpHistory(lane);
         const rect = e.target.getBoundingClientRect();
         celebrate({ coordinate: [rect.left + 20, rect.top + 20], tags: LANE_DEFAULT_METERS[lane] || ['focus'], amount: 3, identityLine: "+1 logged · " + lane });
       }
@@ -1245,7 +1378,9 @@ const LANE_DEFAULT_METERS = {
   legal: ['courage', 'focus'],
   business: ['courage', 'capital'],
   capital: ['capital', 'voice'],
-  content: ['voice', 'focus']
+  money: ['capital', 'care'],
+  content: ['voice', 'focus'],
+  care: ['care']
 };
 
 function celebrate(opts) {
@@ -1435,6 +1570,100 @@ function renderRhythm() {
     insp.onclick = () => { state.inspireIdx = (state.inspireIdx + 1) % INSPIRATIONS.length; saveState(); renderRhythm(); };
   }
 }
+// ====== HISTORY + GROWTH ACROSS SECTORS ======
+function bumpHistory(laneId) {
+  if (!laneId) return;
+  const today = new Date().toISOString().split('T')[0];
+  state.history = state.history || {};
+  state.history[today] = state.history[today] || {};
+  state.history[today][laneId] = (state.history[today][laneId] || 0) + 1;
+}
+function renderGrowth() {
+  const root = document.getElementById('growth-grid');
+  if (!root) return;
+  state.history = state.history || {};
+  const today = new Date(); today.setHours(0,0,0,0);
+  const days = []; const prior = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today); d.setDate(d.getDate() - i);
+    days.push(d.toISOString().split('T')[0]);
+  }
+  for (let i = 13; i >= 7; i--) {
+    const d = new Date(today); d.setDate(d.getDate() - i);
+    prior.push(d.toISOString().split('T')[0]);
+  }
+  const SECTOR_NAMES = {
+    legal: '📍 Legal',
+    business: '🏛️ Business',
+    capital: '🎯 Capital',
+    money: '💰 Money',
+    content: '📊 Content',
+    care: '🌅 Care'
+  };
+  root.innerHTML = Object.keys(state.lanes).map(key => {
+    const week = days.map(d => (state.history[d] && state.history[d][key]) || 0);
+    const weekSum = week.reduce((a,b) => a+b, 0);
+    const priorSum = prior.reduce((a, d) => a + ((state.history[d] && state.history[d][key]) || 0), 0);
+    let delta = '→', deltaCls = 'flat';
+    if (weekSum > priorSum) { delta = '↑'; deltaCls = 'up'; }
+    else if (weekSum < priorSum && priorSum > 0) { delta = '↓'; deltaCls = 'down'; }
+    const max = Math.max(...week, 1);
+    const spark = week.map((v, i) => {
+      const h = Math.max(2, (v / max) * 18);
+      const x = i * 7 + 1;
+      const y = 20 - h;
+      return `<rect x="${x}" y="${y}" width="5" height="${h}" rx="1" fill="currentColor" opacity="${v > 0 ? 1 : 0.18}" />`;
+    }).join('');
+    const name = SECTOR_NAMES[key] || (state.lanes[key].emoji + ' ' + key);
+    return `
+      <div class="sector ${key}">
+        <div class="s-head">${name}</div>
+        <div class="s-val">${weekSum}<span class="s-delta ${deltaCls}">${delta}</span></div>
+        <svg class="s-spark" viewBox="0 0 50 22" preserveAspectRatio="none">${spark}</svg>
+        <div class="s-label">last 7 days · prior ${priorSum}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ====== TREAT ENGINE ======
+function pickTreat() {
+  const treat = TREATS[Math.floor(Math.random() * TREATS.length)];
+  const root = document.getElementById('treat-text');
+  if (root) {
+    root.innerHTML = `<b>${treat.icon} ${escapeHtml(treat.text)}</b><span class="why">— ${escapeHtml(treat.why)}</span>`;
+  }
+  playPop();
+}
+const _treatBtn = document.getElementById('treat-btn');
+if (_treatBtn) _treatBtn.addEventListener('click', pickTreat);
+
+// ====== FINANCE WINS ======
+function renderFinanceWins() {
+  const root = document.getElementById('finance-grid');
+  if (!root) return;
+  if (!state.financeWins) state.financeWins = [];
+  if (!state.financeWins.length) {
+    root.innerHTML = '<div class="f-card"><b>Log your first win</b>Thinkific cancelled? Account reconciled? Add it.</div>';
+    return;
+  }
+  root.innerHTML = state.financeWins.slice(0, 8).map(w => `<div class="f-card"><b>${escapeHtml(w.title)}</b>${escapeHtml(w.note || '')}</div>`).join('');
+}
+const _financeBtn = document.getElementById('finance-add');
+if (_financeBtn) {
+  _financeBtn.addEventListener('click', () => {
+    const input = document.getElementById('finance-input');
+    const t = input.value.trim();
+    if (!t) return;
+    state.financeWins = state.financeWins || [];
+    state.financeWins.unshift({ title: t, note: new Date().toLocaleDateString() });
+    state.financeWins = state.financeWins.slice(0, 20);
+    input.value = '';
+    saveState(); renderFinanceWins();
+    celebrate({ tags: ['capital'], amount: 5, identityLine: 'Finance win logged. Compounds.' });
+  });
+}
+
 function renderAudio() {
   const moodRoot = document.getElementById("audio-mood");
   const showsRoot = document.getElementById("audio-shows");
@@ -1484,6 +1713,8 @@ function renderAll() {
   document.getElementById("today-date").textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
   renderRhythm();
   if (typeof renderAudio === 'function') renderAudio();
+  if (typeof renderFinanceWins === 'function') renderFinanceWins();
+  if (typeof renderGrowth === 'function') renderGrowth();
   renderWeek();
   renderCountdowns();
   renderTodaysThree();
