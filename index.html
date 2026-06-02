@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>EJC Command Center</title>
+<title>Tyra · Personal Operating System</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -586,11 +586,11 @@
 <div class="wrap">
 
 <header>
-  <div class="eyebrow">EdJustice Collective · Command Center</div>
+  <div class="eyebrow">Personal Operating System</div>
   <div class="head-row">
     <div>
       <h1 class="brand-title">Today, Tyra.</h1>
-      <div class="brand-sub">Chief Possibility Pilot · Build systems. Promote justice.</div>
+      <div class="brand-sub">Your Chief of Staff + Personal Assistant · ADHD-friendly · wellness up, overwhelm down</div>
     </div>
     <div class="today-date" id="today-date"></div>
   </div>
@@ -2101,6 +2101,14 @@ function renderAttention() {
   const vietnamDays = Math.ceil((vietnamDate - todayD) / 86400000);
   if (vietnamDays > 0) {
     items.push({ icon: '✈️', text: 'Vietnam trip · ' + vietnamDays + ' days · check Tampa→HAN/SGN price + book by ' + new Date(vietnamDate.getTime() - 56*86400000).toLocaleDateString() + ' (8-wk window)', type: vietnamDays <= 70 ? 'warning' : 'info' });
+  }
+  // BEACH HOUSE — annual family vacation (Jun 29 – Jul 5, 2026)
+  const beachStart = new Date(2026, 5, 29);
+  const beachDays = Math.ceil((beachStart - todayD) / 86400000);
+  if (beachDays > 0 && beachDays <= 60) {
+    items.push({ icon: '🏖️', text: 'Beach house · annual family vacay · ' + beachDays + ' days · Jun 29 – Jul 5', type: beachDays <= 14 ? 'warning' : 'info' });
+  } else if (beachDays >= -7 && beachDays <= 0) {
+    items.push({ icon: '🏖️', text: 'Beach house · IN PROGRESS · family vacay through Jul 5', type: 'info' });
   }
   if (state.alphaBetDeadline) {
     const d = daysUntilStr(state.alphaBetDeadline);
