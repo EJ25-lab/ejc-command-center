@@ -337,6 +337,121 @@
     .xp-strip { grid-template-columns: 1fr; gap: 14px; text-align: left; }
     .xp-strip .target { text-align: left; }
   }
+
+  /* PHONE — under 600px, full mobile overhaul */
+  @media (max-width: 600px) {
+    body { font-size: 15px; }
+    .wrap { padding: 16px 14px 60px; max-width: 100%; }
+
+    /* Header: tighter, stack date */
+    header { padding-bottom: 14px; margin-bottom: 18px; }
+    h1.brand-title { font-size: 1.55rem; }
+    .brand-sub { font-size: 12px; }
+    .head-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .today-date { text-align: left; font-size: 12px; }
+
+    /* Top-right pills: shrink + restack */
+    .sound-toggle { top: 8px; right: 8px; padding: 5px 9px; font-size: 10px; }
+    #sync-pill { top: 8px; right: 8px !important; left: 8px; padding: 5px 9px; font-size: 10px; }
+
+    /* Section headings — tighter */
+    .section-h { padding-bottom: 6px; margin-bottom: 12px; }
+    .section-h h2 { font-size: 1.1rem; }
+    .section-h .hint { font-size: 11px; }
+
+    /* Attention panel */
+    .attention-wrap { padding: 14px 16px; margin-bottom: 18px; }
+    .att-row { padding: 8px 0; gap: 10px; }
+    .att-row .att-text { font-size: 13px; }
+
+    /* Rhythm ribbon — full stack */
+    .rhythm { grid-template-columns: 1fr; gap: 12px; padding: 14px 16px; margin-bottom: 18px; }
+    .rhythm .ritual { font-size: 12px; gap: 12px; }
+    .rhythm .inspire { font-size: 12px; max-width: 100%; }
+    .rhythm .loc-pills { flex-wrap: wrap; }
+    .rhythm .loc-pill { padding: 8px 12px; font-size: 12px; }
+
+    /* Growth across sectors — 2 columns max */
+    .growth-wrap { padding: 14px 16px; margin-bottom: 18px; }
+    .growth-grid { grid-template-columns: repeat(2, 1fr); }
+    .sector { padding: 10px 12px; }
+    .sector .s-val { font-size: 1.2rem; }
+
+    /* Finance + Treat + Audio strips */
+    .finance-strip, .treat-strip, .audio-strip { padding: 14px 16px; margin-bottom: 18px; grid-template-columns: 1fr; gap: 10px; }
+    .treat-btn { width: 100%; padding: 12px 20px; font-size: 13px; }
+    .finance-strip .f-grid { grid-template-columns: 1fr; }
+    .audio-mood, .audio-shows { flex-wrap: wrap; }
+    .audio-now { text-align: left; min-width: 0; font-size: 12px; }
+
+    /* Countdown strip — 2 columns */
+    .strip { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 18px; }
+    .countdown { padding: 12px 14px; }
+    .countdown .value { font-size: 1.5rem; }
+
+    /* XP strip — stacked */
+    .xp-strip { padding: 14px 16px; }
+    .xp-strip .xp-num { font-size: 1.4rem; }
+
+    /* Today's 3 — bigger touch, wrap properly */
+    .start-button { padding: 18px 20px; font-size: 16px; }
+    .start-button .sb-eyebrow { font-size: 9px; }
+    .todays-three { padding: 14px 16px; margin-bottom: 18px; }
+    .t3-row { flex-wrap: wrap; gap: 10px; padding: 10px 0; }
+    .t3-row input[type=checkbox] { width: 24px; height: 24px; }
+    .t3-row input[type=text] { flex: 1 1 200px; font-size: 15px; min-width: 0; }
+    .t3-row .lane-tag { font-size: 9px; padding: 3px 8px; }
+    .t3-row .break-btn { font-size: 9px; padding: 5px 8px; flex: 0 0 auto; }
+    .t3-actions { flex-wrap: wrap; }
+    .stuck-btn, .reset-btn { font-size: 12px; padding: 8px 14px; }
+
+    /* Substeps */
+    .substeps { padding-left: 14px; }
+    .substep input[type=checkbox] { width: 22px; height: 22px; }
+    .substep span { font-size: 13px; }
+    .substep .micro-tag { font-size: 8px; padding: 2px 6px; }
+
+    /* Lanes */
+    .lanes { gap: 12px; margin-bottom: 18px; }
+    .lane { padding: 14px 16px; }
+    .lane h3 { font-size: 14px; flex-wrap: wrap; gap: 6px; }
+    .lane h3 .health { font-size: 9px; padding: 2px 8px; }
+    .lane li { font-size: 13px; padding: 6px 0; }
+    .lane li input[type=checkbox] { width: 22px; height: 22px; }
+    .lane li .break-btn-sm { font-size: 9px; padding: 3px 6px; }
+
+    /* Bottom grid (slipped + wins) */
+    .bottom-grid { gap: 12px; margin-bottom: 18px; }
+    .panel { padding: 14px 16px; }
+
+    /* Quick links — single column */
+    .quicklinks { padding: 14px 16px; }
+    .quicklinks .qrow { grid-template-columns: 1fr; gap: 8px; }
+    .quicklinks button { padding: 12px 14px; font-size: 13px; }
+
+    /* Badges */
+    .badges-panel { padding: 14px 16px; }
+    .badge { font-size: 11px; padding: 5px 10px; }
+
+    /* Week strip — stack rows */
+    .week-strip { padding: 12px 14px; }
+    .week-strip .week-row { flex-direction: column; align-items: flex-start; gap: 4px; padding: 10px 0; }
+    .week-strip .week-date { min-width: 0; font-size: 10px; }
+    .week-strip .week-time { min-width: 0; font-size: 12px; }
+    .week-strip .week-title { font-size: 13px; }
+    .week-strip .week-link { font-size: 11px; padding: 3px 8px; align-self: flex-start; }
+
+    /* Toast — full width on phone */
+    #toast-stack { bottom: 14px; right: 14px; left: 14px; max-width: none; }
+    .toast { font-size: 13px; padding: 12px 14px; }
+
+    /* Footer pulls less */
+    footer { font-size: 9px; padding: 10px; margin: 24px -14px -60px; }
+
+    /* Ritual card */
+    .ritual-card { padding: 16px 18px; }
+    .ritual-card .r-thesis { font-size: 15px; }
+  }
 </style>
 </head>
 <body>
@@ -575,6 +690,7 @@
 <div id="toast-stack"></div>
 <canvas id="confetti-canvas"></canvas>
 <button class="sound-toggle" id="sound-toggle">🔊 SOUND ON</button>
+<div id="sync-pill" style="position:fixed;top:14px;right:140px;z-index:100;background:var(--off);border:1px solid var(--warm);border-radius:100px;padding:6px 12px;font-family:var(--font);font-size:11px;font-weight:700;color:var(--mid);letter-spacing:0.04em">local-only</div>
 
 <footer>
   EdJustice Collective · Build Systems. Promote Justice. · EIN 99-3477706
@@ -923,6 +1039,10 @@ const AUDIO_MOODS = [
   { id: "reset", label: "🧘 Reset" }
 ];
 
+// Apps Script bridge — when served as Web App, syncs state to Sheet.
+// Falls back to localStorage-only outside Apps Script (e.g., GitHub Pages preview, Cowork artifact).
+const HAS_GAS = typeof google !== 'undefined' && typeof google.script !== 'undefined' && typeof google.script.run !== 'undefined';
+
 let state = loadState();
 
 function loadState() {
@@ -935,8 +1055,54 @@ function loadState() {
     return structuredClone(DEFAULT_STATE);
   }
 }
+
 function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  // Local cache first for instant feel
+  try {
+    state.lastUpdated = new Date().toISOString();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {}
+  // Debounced sync to Sheet via Apps Script
+  if (HAS_GAS) {
+    clearTimeout(window.__ccSaveTimer);
+    window.__ccSaveTimer = setTimeout(() => {
+      try {
+        google.script.run
+          .withFailureHandler(err => { console.warn('cc save failed', err); })
+          .withSuccessHandler(() => { try { document.getElementById('sync-pill').textContent = '✓ synced'; } catch(_){} })
+          .writeState(JSON.stringify(state));
+        try { document.getElementById('sync-pill').textContent = 'syncing…'; } catch(_){}
+      } catch (e) { console.warn('cc save throw', e); }
+    }, 1500);
+  }
+}
+
+// On startup, pull from Sheet if newer than local
+function pullFromSheet() {
+  if (!HAS_GAS) return;
+  google.script.run
+    .withFailureHandler(err => console.warn('cc pull failed', err))
+    .withSuccessHandler(jsonStr => {
+      if (!jsonStr) return;
+      try {
+        const serverState = JSON.parse(jsonStr);
+        if (!serverState || typeof serverState !== 'object') return;
+        const localTs = (state.lastUpdated && new Date(state.lastUpdated).getTime()) || 0;
+        const serverTs = (serverState.lastUpdated && new Date(serverState.lastUpdated).getTime()) || 0;
+        if (serverTs > localTs) {
+          state = Object.assign(structuredClone(DEFAULT_STATE), serverState);
+          try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(_){}
+          renderAll();
+          try { document.getElementById('sync-pill').textContent = '✓ synced'; } catch(_){}
+        }
+      } catch (e) { console.warn('cc pull parse', e); }
+    })
+    .readState();
+}
+// Also re-pull when tab regains focus
+if (HAS_GAS) {
+  window.addEventListener('focus', () => pullFromSheet());
+  setTimeout(pullFromSheet, 500);
 }
 
 // ============ COUNTDOWNS ============
