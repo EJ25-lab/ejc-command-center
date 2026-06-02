@@ -14,6 +14,13 @@
     --orange:#F28C38; --orange-pal:#FEF3E8; --orange-dk:#D4721E;
     --green:#34C78A; --green-pal:#E8F9F0; --green-dk:#1FA66E;
     --purple:#9B8AFA; --purple-pal:#F0EEFF; --purple-dk:#6D5CE6;
+    /* LANE PALETTE — 6 distinct lane colors for quick scanning */
+    --indigo:#6366F1; --indigo-pal:#EEF2FF; --indigo-dk:#3730A3;
+    --amber:#F59E0B; --amber-pal:#FFFBEB; --amber-dk:#B45309;
+    --violet:#8B5CF6; --violet-pal:#F5F3FF; --violet-dk:#6D28D9;
+    --rose:#F43F5E; --rose-pal:#FFF1F2; --rose-dk:#BE123C;
+    /* STATUS OVERLAY colors */
+    --urgent:#F59E0B; --slipped:#EF4444; --shipped:#10B981;
     --white:#fff; --font:'Poppins',sans-serif;
   }
   * { box-sizing: border-box; }
@@ -82,10 +89,12 @@
   .t3-row input[type=text]:focus { outline: none; border-bottom: 1.5px solid var(--teal); }
   .t3-row.done input[type=text] { text-decoration: line-through; color: var(--light); font-weight: 400; }
   .t3-row .lane-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 100px; cursor: pointer; background: var(--off); color: var(--mid); border: 1px solid var(--warm); }
-  .t3-row .lane-tag.legal { background: var(--orange-pal); color: var(--orange-dk); border-color: var(--orange); }
-  .t3-row .lane-tag.business { background: var(--teal-pale); color: var(--teal-deep); border-color: var(--teal); }
+  .t3-row .lane-tag.legal { background: var(--indigo-pal); color: var(--indigo-dk); border-color: var(--indigo); }
+  .t3-row .lane-tag.business { background: var(--amber-pal); color: var(--amber-dk); border-color: var(--amber); }
   .t3-row .lane-tag.capital { background: var(--green-pal); color: var(--green-dk); border-color: var(--green); }
-  .t3-row .lane-tag.content { background: var(--purple-pal); color: var(--purple-dk); border-color: var(--purple); }
+  .t3-row .lane-tag.money { background: var(--violet-pal); color: var(--violet-dk); border-color: var(--violet); }
+  .t3-row .lane-tag.content { background: var(--teal-pale); color: var(--teal-deep); border-color: var(--teal); }
+  .t3-row .lane-tag.care { background: var(--rose-pal); color: var(--rose-dk); border-color: var(--rose); }
   .t3-row .break-btn { font-family: var(--font); font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 10px; border-radius: 6px; background: var(--teal-pale); color: var(--teal-deep); border: 1px solid var(--teal); cursor: pointer; white-space: nowrap; transition: all 0.15s; }
   .t3-row .break-btn:hover { background: var(--teal); color: var(--white); }
   .t3-row .break-btn.thinking { background: var(--orange-pal); color: var(--orange-dk); border-color: var(--orange); }
@@ -124,10 +133,30 @@
   /* LANES */
   .lanes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 30px; }
   .lane { background: var(--white); border: 1px solid var(--warm); border-left: 3px solid var(--teal); border-radius: 12px; padding: 20px; }
-  .lane.legal { border-left-color: var(--orange-dk); }
-  .lane.business { border-left-color: var(--teal); }
-  .lane.capital { border-left-color: var(--green-dk); }
-  .lane.content { border-left-color: var(--purple-dk); }
+  .lane.legal { border-left-color: var(--indigo-dk); border-left-width: 5px; }
+  .lane.business { border-left-color: var(--amber-dk); border-left-width: 5px; }
+  .lane.capital { border-left-color: var(--green-dk); border-left-width: 5px; }
+  .lane.money { border-left-color: var(--violet-dk); border-left-width: 5px; }
+  .lane.content { border-left-color: var(--teal-deep); border-left-width: 5px; }
+  .lane.care { border-left-color: var(--rose-dk); border-left-width: 5px; }
+  /* Lane header pill — name picks up lane color */
+  .lane.legal h3 .lane-emoji,
+  .lane.legal h3 span:first-child { color: var(--indigo-dk); }
+  .lane.business h3 .lane-emoji,
+  .lane.business h3 span:first-child { color: var(--amber-dk); }
+  .lane.capital h3 .lane-emoji,
+  .lane.capital h3 span:first-child { color: var(--green-dk); }
+  .lane.money h3 .lane-emoji,
+  .lane.money h3 span:first-child { color: var(--violet-dk); }
+  .lane.content h3 .lane-emoji,
+  .lane.content h3 span:first-child { color: var(--teal-deep); }
+  .lane.care h3 .lane-emoji,
+  .lane.care h3 span:first-child { color: var(--rose-dk); }
+  /* Status overlay chips — apply via class on task items or row */
+  .status-pill { display:inline-block; font-size:9px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; padding:2px 7px; border-radius:100px; margin-left:6px; vertical-align:middle; }
+  .status-pill.urgent { background:#FEF3C7; color:#92400E; border:1px solid var(--urgent); }
+  .status-pill.slipped { background:#FEE2E2; color:#991B1B; border:1px solid var(--slipped); }
+  .status-pill.shipped { background:#D1FAE5; color:#065F46; border:1px solid var(--shipped); }
   .lane h3 { font-family: var(--font); font-size: 15px; font-weight: 700; color: var(--text); margin: 0 0 6px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
   .lane h3 .lane-emoji { font-size: 18px; margin-right: 4px; }
   .lane h3 .health { font-size: 10px; padding: 3px 10px; border-radius: 100px; font-weight: 700; letter-spacing: 0.06em; }
@@ -149,6 +178,8 @@
   .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 30px; }
   .panel { background: var(--white); border: 1px solid var(--warm); border-radius: 12px; padding: 20px; }
   .panel ul { list-style: none; padding: 0; margin: 0; }
+  .nature-pick { font-size: 12px; color: var(--green-dk); font-weight: 500; }
+  .nature-pick b { color: var(--green-dk); font-weight: 700; }
   .slipped li { font-size: 14px; padding: 8px 0; color: var(--orange-dk); border-bottom: 1px dashed var(--warm); }
   .slipped li:last-of-type { border-bottom: none; }
   .slipped li b { color: var(--text); font-weight: 700; }
@@ -242,6 +273,31 @@
   /* SOUND TOGGLE */
   .sound-toggle { position: fixed; top: 14px; right: 14px; z-index: 100; background: var(--white); border: 1px solid var(--warm); border-radius: 100px; padding: 6px 12px; font-family: var(--font); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: var(--mid); cursor: pointer; }
   .sound-toggle.on { background: var(--teal); color: var(--white); border-color: var(--teal-dark); }
+
+  /* LIGHT WORK MODE banner + toggle */
+  .light-banner { background: linear-gradient(95deg, #e6f0e9, #fff5e6); border: 1.5px solid var(--green); border-radius: 12px; padding: 12px 18px; margin-bottom: 18px; font-size: 13px; color: var(--green-dk); font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+  .light-banner b { color: var(--green-dk); font-weight: 800; }
+  .light-toggle { position: fixed; top: 14px; right: 270px; z-index: 100; background: var(--white); border: 1px solid var(--warm); border-radius: 100px; padding: 6px 12px; font-family: var(--font); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: var(--mid); cursor: pointer; }
+  .light-toggle.on { background: var(--green-dk); color: var(--white); border-color: var(--green-dk); }
+  body.light-mode .lane:nth-of-type(n+2), body.light-mode .t3-row:nth-of-type(n+2), body.light-mode .audio-strip, body.light-mode .treat-strip, body.light-mode .finance-strip, body.light-mode .growth-wrap, body.light-mode .quicklinks, body.light-mode .badges-panel { display: none !important; }
+
+  /* ADVENTURE LOG — Jesse Itzler intentional-time + glimmers */
+  .adventure-wrap { background: linear-gradient(135deg, #fff8ef 0%, #f6efdf 100%); border: 1.5px solid #c87a3e; border-radius: 14px; padding: 16px 20px; margin-bottom: 26px; }
+  .adventure-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(200,122,62,0.2); }
+  .adventure-head h2 { font-size: 1.05rem; font-weight: 700; color: #8a5f23; }
+  .adventure-head .hint { font-size: 11px; color: var(--mid); font-style: italic; }
+  .adventure-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .adventure-stat { background: var(--white); border-radius: 10px; padding: 10px 14px; }
+  .adventure-stat .stat-label { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mid); margin-bottom: 4px; }
+  .adventure-stat .stat-val { font-size: 1.3rem; font-weight: 800; color: #8a5f23; line-height: 1; }
+  .adventure-stat .stat-sub { font-size: 11px; color: var(--mid); margin-top: 4px; }
+  .adventure-log { max-height: 120px; overflow-y: auto; margin-bottom: 10px; }
+  .glimmer-row { font-size: 12px; padding: 4px 0; color: var(--text); border-bottom: 1px dashed rgba(200,122,62,0.2); }
+  .glimmer-row:last-child { border-bottom: none; }
+  .glimmer-row small { color: var(--mid); font-weight: 600; margin-right: 8px; }
+  .glimmer-add { display: flex; gap: 6px; }
+  .glimmer-add input { flex: 1; font-family: var(--font); border: 1px solid var(--warm); border-radius: 6px; padding: 7px 10px; font-size: 12px; }
+  .glimmer-add button { font-family: var(--font); background: #c87a3e; color: var(--white); border: none; border-radius: 6px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; }
 
   /* ATTENTION PANEL — always visible, top of page */
   .attention-wrap { background: #fef9f3; border: 2px solid var(--orange-dk); border-radius: 14px; padding: 16px 20px; margin-bottom: 26px; box-shadow: 0 4px 16px rgba(212,114,30,0.08); }
@@ -452,6 +508,77 @@
     .ritual-card { padding: 16px 18px; }
     .ritual-card .r-thesis { font-size: 15px; }
   }
+
+  /* ========================================
+     v8 POLISH PASS — Font readability + warmth
+     ======================================== */
+  body { font-size: 17px; line-height: 1.65; }
+
+  /* Header — subtle gradient + larger title */
+  header { background: linear-gradient(180deg, var(--teal-pale) 0%, transparent 80%); padding: 22px 24px 22px; border-radius: 14px; margin: 0 -8px 28px; border: none; }
+  header .eyebrow { font-size: 12px; }
+  h1.brand-title { font-size: 2.4rem; text-shadow: 0 1px 0 rgba(255,255,255,0.6); }
+  .brand-sub { font-size: 15px; }
+  .today-date { font-size: 14px; }
+
+  /* Section headings */
+  .section-h h2 { font-size: 1.42rem; }
+  .section-h .hint { font-size: 14px; }
+
+  /* Today's 3 row tints by lane (soft) */
+  .t3-row { transition: background 0.15s; border-radius: 10px; padding: 14px 16px; margin-bottom: 8px; border: 1px solid var(--warm); background: var(--white); }
+  .t3-row:has(.lane-tag.legal) { background: linear-gradient(90deg, rgba(99,102,241,0.05) 0%, var(--white) 60%); border-left: 4px solid var(--indigo); }
+  .t3-row:has(.lane-tag.business) { background: linear-gradient(90deg, rgba(245,158,11,0.06) 0%, var(--white) 60%); border-left: 4px solid var(--amber); }
+  .t3-row:has(.lane-tag.capital) { background: linear-gradient(90deg, rgba(52,199,138,0.06) 0%, var(--white) 60%); border-left: 4px solid var(--green); }
+  .t3-row:has(.lane-tag.money) { background: linear-gradient(90deg, rgba(139,92,246,0.06) 0%, var(--white) 60%); border-left: 4px solid var(--violet); }
+  .t3-row:has(.lane-tag.content) { background: linear-gradient(90deg, rgba(26,188,176,0.06) 0%, var(--white) 60%); border-left: 4px solid var(--teal); }
+  .t3-row:has(.lane-tag.care) { background: linear-gradient(90deg, rgba(244,63,94,0.06) 0%, var(--white) 60%); border-left: 4px solid var(--rose); }
+  .t3-row input[type=text] { font-size: 17px; font-weight: 600; }
+  .t3-row .lane-tag { font-size: 11px; padding: 5px 12px; }
+  .t3-row .break-btn { font-size: 11px; padding: 6px 12px; }
+
+  /* Substeps — bigger text, soft teal background, more padding */
+  .substeps { padding: 12px 16px 12px 40px; background: linear-gradient(90deg, rgba(26,188,176,0.06), rgba(26,188,176,0.02) 50%, transparent); border-radius: 0 0 10px 10px; border-left: 2px solid var(--teal-pale); margin-top: -6px; margin-bottom: 14px; }
+  .substep { font-size: 15px; padding: 8px 0; }
+  .substep .micro-tag { font-size: 10px; padding: 3px 9px; }
+  .substep-empty { font-size: 13px; }
+
+  /* Lane cards — bigger text, hover lift, lane-color header */
+  .lane { padding: 22px; transition: transform 0.15s, box-shadow 0.2s; }
+  .lane:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+  .lane h3 { font-size: 17px; }
+  .lane h3 .lane-emoji { font-size: 22px; }
+  .lane .lane-sub { font-size: 14px; line-height: 1.6; margin-bottom: 16px; }
+  .lane li { font-size: 16px; line-height: 1.6; padding: 9px 0; }
+  .lane h3 .health { font-size: 11px; padding: 4px 12px; }
+
+  /* Countdowns — bigger */
+  .countdown .label { font-size: 11px; }
+  .countdown .value { font-size: 2.2rem; }
+  .countdown .value small { font-size: 14px; }
+  .countdown .sub { font-size: 13.5px; line-height: 1.5; }
+
+  /* XP strip — bigger */
+  .xp-strip .level-label { font-size: 11px; }
+  .xp-strip .xp-num { font-size: 2rem; }
+  .xp-strip .streak { font-size: 16px; }
+  .xp-strip .streak b { font-size: 1.35rem; }
+  .xp-strip .target { font-size: 13px; }
+  .xp-strip .target b { font-size: 15px; }
+
+  /* Slipped + wins */
+  .slipped li, .wins li, .slipped .empty, .wins .empty { font-size: 15px; padding: 9px 0; }
+
+  /* Quicklinks + badges */
+  .quicklinks button { font-size: 14.5px; padding: 14px 16px; }
+  .badge { font-size: 13px; padding: 7px 16px; }
+
+  /* Rhythm ribbon */
+  .rhythm .ritual { font-size: 14.5px; }
+  .rhythm .loc-label { font-size: 11px; }
+
+  /* Footer */
+  footer { font-size: 11px; padding: 14px; }
 </style>
 </head>
 <body>
@@ -495,6 +622,37 @@
     <div class="r-tier"><b>T4</b> <span>Parent & Community Partners — resources to build knowledge of standards + how to support</span></div>
     <div class="r-tier"><b>T5</b> <span>School Level Personnel — expertise in designing + implementing differentiated instruction</span></div>
     <div class="r-kofi">"Knowledge is power. Information is liberating. Education is the premise of progress, in every society, in every family." — Kofi Annan</div>
+  </div>
+</div>
+
+<!-- LIGHT WORK MODE banner (visible when toggle is on) -->
+<div id="light-banner" class="light-banner" style="display:none">
+  <span>🌿 <b>Light Work Mode ON.</b> Family + reset first. Only critical work surfaces.</span>
+  <span style="font-size:11px;color:var(--mid)">Click 🌿 top-right to turn off</span>
+</div>
+
+<!-- ADVENTURE LOG — Jesse Itzler intentional time + glimmers -->
+<div class="adventure-wrap">
+  <div class="adventure-head">
+    <h2>🌅 Adventures + Glimmers</h2>
+    <span class="hint">wandering counts as work</span>
+  </div>
+  <div class="adventure-stats">
+    <div class="adventure-stat">
+      <div class="stat-label">This month</div>
+      <div class="stat-val" id="month-glimmers">0</div>
+      <div class="stat-sub">mini-adventures · goal 1/mo</div>
+    </div>
+    <div class="adventure-stat">
+      <div class="stat-label">This quarter</div>
+      <div class="stat-val" id="quarter-trip">VA + Vietnam</div>
+      <div class="stat-sub">June family · Sept big trip</div>
+    </div>
+  </div>
+  <div class="adventure-log" id="adventure-log"></div>
+  <div class="glimmer-add">
+    <input type="text" id="glimmer-input" placeholder="Log a glimmer: roadside view, museum hour, park sit…" />
+    <button id="glimmer-add-btn">Log</button>
   </div>
 </div>
 
@@ -638,7 +796,8 @@
   <div class="panel">
     <div class="section-h" style="margin-bottom:12px">
       <span class="marker">✅</span>
-      <h2 style="font-size:1.05rem">Recent wins</h2>
+      <h2 style="font-size:1.05rem">Real-time receipts</h2>
+      <span class="hint">You are doing this.</span>
     </div>
     <ul class="wins" id="wins-list"></ul>
   </div>
@@ -690,6 +849,7 @@
 <div id="toast-stack"></div>
 <canvas id="confetti-canvas"></canvas>
 <button class="sound-toggle" id="sound-toggle">🔊 SOUND ON</button>
+<button class="light-toggle" id="light-toggle">🌿 LIGHT WORK</button>
 <div id="sync-pill" style="position:fixed;top:14px;right:140px;z-index:100;background:var(--off);border:1px solid var(--warm);border-radius:100px;padding:6px 12px;font-family:var(--font);font-size:11px;font-weight:700;color:var(--mid);letter-spacing:0.04em">local-only</div>
 
 <footer>
@@ -710,6 +870,8 @@ const DEFAULT_STATE = {
     { title: "Cancelled duplicate Thinkific", note: "Billing leak stopped" },
     { title: "Great month of cleanup", note: "Multiple accounts reconciled" }
   ],
+  glimmers: [],
+  lightWorkMode: false,
   taskSubsteps: {
     "lane-legal-0": [
       { text: "Open /Desktop/Soft Copy Case files/Case Organization Guide.md — anchor", done: false },
@@ -744,18 +906,20 @@ const DEFAULT_STATE = {
     ]
   },
   thisWeek: [
-    { date: "Tue Jun 3", time: "PM", title: "Cook for family of 4 (anticipate + buy)", link: "" },
+    { date: "Tue Jun 2", time: "PM", title: "Cook for family of 4", link: "" },
     { date: "Wed Jun 3", time: "—", title: "WY LLC payment retry (call bank first)", link: "" },
-    { date: "Thu Jun 4", time: "AM", title: "Alpha-Bet — SUBMIT (4 fields + video + brief sent)", link: "" },
-    { date: "Thu Jun 4", time: "2–4pm ET", title: "Tyra/Funder Partner Data Review — E3 dashboard drop", link: "https://" },
-    { date: "Fri Jun 5", time: "TBD", title: "Spouse Symposium — speaker panel (details in personal email)", link: "" },
-    { date: "Sun Jun 7", time: "PM", title: "Cook for family of 4 (anticipate + buy)", link: "" },
-    { date: "Sun Jun 7", time: "7pm", title: "Sunday strategic review", link: "" }
+    { date: "Thu Jun 4", time: "AM", title: "Alpha-Bet — SUBMIT", link: "" },
+    { date: "Thu Jun 4", time: "2–4pm ET", title: "Funder Partner Data Review", link: "" },
+    { date: "Fri Jun 5", time: "TBD", title: "Spouse Symposium — speaker panel", link: "" },
+    { date: "Sun Jun 7", time: "7pm", title: "Sunday strategic review + cook for family", link: "" },
+    { date: "Fri Jun 6", time: "TRAVEL", title: "✈️ Fly to VA / Chesterfield — daughter + SIL move, new baby prep", link: "" },
+    { date: "Wed Jun 10", time: "TBD", title: "🤝 In-person meeting (during VA trip — working that day)", link: "" },
+    { date: "Fri Jun 12", time: "TRAVEL", title: "✈️ Return from VA", link: "" }
   ],
   todaysThree: [
-    { text: "Alpha-Bet — send v3 Lead Brief PDF to program lead", lane: "capital", done: false },
-    { text: "Alpha-Bet — paste 4 tightened app answers into application", lane: "capital", done: false },
-    { text: "Alpha-Bet — shoot 60-sec video + submit by Thursday", lane: "capital", done: false }
+    { text: "Alpha-Bet — text v8 PDF + send AppAnswers to program lead NOW", lane: "capital", done: false },
+    { text: "Alpha-Bet — paste answers + update Field 3 to $1T (Reason/NCES) + shoot video + submit", lane: "capital", done: false },
+    { text: "EPISD timeline — kickoff handbook + state-policy violations cross-ref (deep work)", lane: "legal", done: false }
   ],
   lanes: {
     legal: {
@@ -879,30 +1043,103 @@ const DEFAULT_STATE = {
   alphaBetDeadline: "2026-06-18"
 };
 
+// FUTURE-TYRA quotes — Draft 6: best-friend voice dominant, legacy/community anchor
+// Date-seeded rotation. The math is one task → one kid / one mom / one teacher / one next leader.
 const INSPIRATIONS = [
-  "Build systems. Promote justice.",
-  "The infrastructure IS the intervention.",
-  "Sunrise first. The work waits.",
-  "Justice is in the details.",
-  "Frameworks, not vibes.",
-  "Court is the rhythm. Everything else flexes.",
-  "Leaders leave with something real in their hands.",
-  "Build sustainable systems, not isolated wins.",
-  "Stakeholder knowledge is the gap. You're closing it.",
-  "Knowledge is power. — Kofi Annan",
-  "Information is liberating. Build accordingly.",
-  "Education is the premise of progress.",
-  "What if achievement wasn't attached to zip code?",
-  "Audacious. Knowledge-driven. Real-time.",
-  "Ignite a revolution in public education.",
-  "All five tiers. All in one framework.",
-  "11.1M students waiting. Move."
+  // Best-friend (highest volume)
+  "girl just send it. one more kid catches the system.",
+  "ship the brief. the next program lead opens a door for someone.",
+  "send the email. another mom doesn't fight alone.",
+  "your daughter is watching how you handle Tuesday.",
+  "30 years of patching. one more today.",
+  "the kids waiting for crisis training need this. send.",
+  "stop reading. another teacher leaves if you don't ship.",
+  "send it. the next Black girl PhD reads about you and stays.",
+  "ship. district A ran. district B is waiting.",
+  "your mama would say send the email.",
+  "ma'am ship it. the work outlives the founder.",
+  "one click → the next leader has the framework.",
+  "send the brief. the next mom isn't lost.",
+  "girl. send it. for the kids.",
+  "ship this for Lillie Bell. for Stephanie.",
+  "the patch you write today catches a kid you'll never meet.",
+  "send the email. the next Tyra knows your name.",
+  "stop spiraling. there's a child you're building for.",
+  "the next leader doesn't need to figure it out alone. ship.",
+  "one task = one ripple. ripple.",
+  "your daughter learns: leaders ship.",
+  "11.1M kids waiting. one less leak today.",
+  "ship the brief. the next mother sleeps.",
+  "one email → one mom catches her kid in time.",
+  "send it. the work outlives you. that's the math.",
+  // Quieter / inward (legacy)
+  "i send the brief because the next mother might find it.",
+  "my work is a love letter to the next leader.",
+  "building is how i love my mother.",
+  "my daughter learns from what i don't skip.",
+  "the dashboard is a small altar to what comes after me.",
+  // Calendar / observed legacy
+  "the brief, sent, reaches the next person who needs it.",
+  "one task touches one community. that's the math.",
+  "the founder built the system. the system catches the child.",
+  "by next month another educator has the framework.",
+  "the work proceeds. the work outlives.",
+  // Ancestral / family
+  "foremothers built whole institutions. you got 3 pages.",
+  "your father didn't flinch. don't flinch.",
+  "ship this for Lillie Bell and Stephanie.",
+  "Audre said your silence won't protect you. build louder for the next girl.",
+  "Toni said free somebody else. send the email — it frees somebody."
 ];
+
+// Present-tense receipts — reverse hack. Mirrors action back to you in real time.
+const PRESENT_RECEIPTS = [
+  "You are closing the loop. Right now.",
+  "You are operating the company. This is what it looks like.",
+  "You are doing this. Look up.",
+  "You are sending the email. This is the chapter.",
+  "You are the woman who finishes the brief.",
+  "You are stacking receipts. In real time.",
+  "This is you building. Right now. Look at it.",
+  "You are turning the calendar into proof.",
+  "You are showing up for future Tyra. She's noticing.",
+  "You are doing what the brief said you would do.",
+  "You are the founder writing this chapter.",
+  "You are honoring the work. Real time.",
+  "You are 30 years deployed. This moment.",
+  "You are doing it. The dashboard is the evidence.",
+  "You are present. Possibility, pilot, moving."
+];
+
+// Tampa nature spots
+const NATURE_SPOTS = [
+  { name: "Causeway", note: "Your usual chapel" },
+  { name: "Cypress Point Park", note: "Bay views, quiet" },
+  { name: "Picnic Island", note: "Off the beaten path" },
+  { name: "Bayshore Boulevard", note: "4.5-mile walk along water" },
+  { name: "Davis Islands", note: "Easy stroll, dog park" },
+  { name: "Lettuce Lake Park", note: "Cypress boardwalk, slower pace" },
+  { name: "Honeymoon Island", note: "Beach day, half-hour drive" },
+  { name: "Hillsborough River State Park", note: "Hiking, 40-min drive" }
+];
+
+function dailyPick(arr) {
+  // Date-seeded: same pick across phone + laptop + email for the same calendar day
+  const d = new Date();
+  const seed = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+  return arr[seed % arr.length];
+}
+// Expanded — wandering is production. Museums, parks, roadside views count.
 const LOCATIONS = [
   { id: "sunrise", label: "🌅 Sunrise" },
   { id: "outside", label: "🌊 Outside" },
+  { id: "park", label: "🌳 Park" },
+  { id: "museum", label: "🏛️ Museum" },
+  { id: "roadside", label: "🛣️ Roadside" },
+  { id: "coffee", label: "☕ Coffee" },
   { id: "car", label: "🚗 Car" },
-  { id: "home", label: "🏠 Home" }
+  { id: "home", label: "🏠 Home" },
+  { id: "traveling", label: "✈️ Traveling" }
 ];
 
 const AUDIO_LIBRARY = [
@@ -1227,13 +1464,14 @@ function renderTodaysThree() {
     if (subs.length) {
       const sw = document.createElement("div");
       sw.className = "substeps";
+      const vision = (state.taskVisions && state.taskVisions[key]) ? state.taskVisions[key] : null;
       sw.innerHTML = subs.map((s, si) => `
         <div class="substep ${s.done ? 'done' : ''}">
           <input type="checkbox" ${s.done ? 'checked' : ''} data-sub-key="${key}" data-sub-idx="${si}" />
           <span>${escapeHtml(s.text)}</span>
           <span class="micro-tag">5 min</span>
         </div>
-      `).join('');
+      `).join('') + (vision ? `<div style="margin-top:10px;padding:8px 12px;font-size:12px;color:#0D6B64;font-style:italic;border-left:2px solid #1ABCB0;background:rgba(26,188,176,0.05)">→ ${escapeHtml(vision)}</div>` : '');
       list.appendChild(sw);
     }
   });
@@ -1263,7 +1501,7 @@ function renderTodaysThree() {
   list.querySelectorAll('.lane-tag').forEach(tag => {
     tag.addEventListener("click", (e) => {
       const idx = +e.target.dataset.idx;
-      const lanes = ["legal", "business", "capital", "content"];
+      const lanes = ["legal", "business", "capital", "money", "content", "care"];
       const cur = state.todaysThree[idx].lane;
       state.todaysThree[idx].lane = lanes[(lanes.indexOf(cur) + 1) % lanes.length];
       saveState(); renderTodaysThree();
@@ -1587,7 +1825,9 @@ function celebrate(opts) {
   // opts: { coordinate: [x,y], tags: ['focus','care'], amount: 5, identityLine: "+1 Possibility Pilot move" }
   playPop();
   fireConfetti(opts.coordinate?.[0], opts.coordinate?.[1]);
-  if (opts.identityLine) toast(opts.identityLine, "meter", "Logged");
+  // PRESENT-TENSE RECEIPT — reverse hack. Pick a random present-tense receipt and toast it.
+  const receipt = PRESENT_RECEIPTS[Math.floor(Math.random() * PRESENT_RECEIPTS.length)];
+  toast(receipt, "meter", "Real-time receipt");
   if (opts.tags && opts.tags.length) bumpMeters(opts.tags, opts.amount || 3);
   maybeSpark();
 }
@@ -1670,6 +1910,54 @@ function updateRitual() {
   }
 }
 
+// ============ LIGHT WORK MODE ============
+function applyLightMode() {
+  const on = !!state.lightWorkMode;
+  document.body.classList.toggle('light-mode', on);
+  const banner = document.getElementById('light-banner');
+  if (banner) banner.style.display = on ? 'flex' : 'none';
+  const btn = document.getElementById('light-toggle');
+  if (btn) { btn.classList.toggle('on', on); btn.textContent = on ? '🌿 LIGHT MODE ON' : '🌿 LIGHT WORK'; }
+}
+document.getElementById('light-toggle')?.addEventListener('click', () => {
+  state.lightWorkMode = !state.lightWorkMode;
+  saveState();
+  applyLightMode();
+  if (state.lightWorkMode) toast("Family + reset first. Critical work only surfaces.", "meter", "🌿 Light mode ON");
+  else toast("Full dashboard back.", "meter", "Full mode ON");
+});
+
+// ============ ADVENTURE LOG ============
+function renderAdventures() {
+  const log = document.getElementById('adventure-log');
+  const monthEl = document.getElementById('month-glimmers');
+  if (!log || !monthEl) return;
+  state.glimmers = state.glimmers || [];
+  const now = new Date();
+  const monthKey = now.getFullYear() + '-' + (now.getMonth()+1);
+  const monthCount = state.glimmers.filter(g => g.date && g.date.startsWith(monthKey)).length;
+  monthEl.textContent = monthCount;
+  log.innerHTML = state.glimmers.slice(0, 8).map(g =>
+    `<div class="glimmer-row"><small>${escapeHtml(g.dateLabel || '')}</small>${escapeHtml(g.text)}</div>`
+  ).join('') || '<div class="glimmer-row" style="color:var(--light);font-style:italic">Log your first glimmer below.</div>';
+}
+document.getElementById('glimmer-add-btn')?.addEventListener('click', () => {
+  const input = document.getElementById('glimmer-input');
+  const t = input.value.trim();
+  if (!t) return;
+  state.glimmers = state.glimmers || [];
+  const now = new Date();
+  state.glimmers.unshift({
+    text: t,
+    date: now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate(),
+    dateLabel: now.toLocaleDateString(undefined, { month:'short', day:'numeric' })
+  });
+  state.glimmers = state.glimmers.slice(0, 30);
+  input.value = '';
+  saveState(); renderAdventures();
+  celebrate({ tags: ['care'], amount: 3, identityLine: 'Glimmer logged. Wandering counts.' });
+});
+
 // Sound toggle
 document.getElementById("sound-toggle").addEventListener("click", () => {
   state.soundOn = !state.soundOn;
@@ -1692,7 +1980,7 @@ document.getElementById("start-button").addEventListener("click", async () => {
   });
   try {
     const reply = await window.cowork.askClaude(
-      `Tyra Harrison has ADHD and is overwhelmed staring at her dashboard. From this list of open tasks, pick the ONE that gives her the smallest possible 5-minute physical first action she can do RIGHT NOW. Return: (1) the chosen task in <b>bold</b>, (2) the 5-minute action as a single sentence starting with a verb, (3) no preamble, no apologies, no list. Voice: peer-to-peer, calm authority, no sugar. Tasks: ${all.slice(0, 30).join(' | ')}`,
+      `You are talking to Tyra Harrison, Chief Possibility Pilot of EdJustice Collective. Her 3-year vision is a $3M/year corporation. She has ADHD. From this list of open tasks, do three things:\n\n1. Pick ONE task that has the smallest 5-minute physical first action she can do RIGHT NOW.\n2. Name that 5-minute action in one verb-led sentence.\n3. Write ONE custom future-state quote tying THIS specific action to the $3M future. The quote should be 8-12 words, lowercase ok, text-message register, NOT generic. It should be specific to the chosen task. Example pattern: "the $3M founder sent this exact email at 10am one Tuesday" or "$3M Tyra hired a CFO because today you wrote the brief."\n\nReturn EXACTLY this HTML format with no preamble:\n<b>[picked task]</b><br><br><b>5-min:</b> [the action]<br><br><i style="color:#0D6B64">[the vision quote]</i>\n\nNo apologies. No list. No coaching. Tasks: ${all.slice(0, 30).join(' | ')}`,
       []
     );
     result.innerHTML = reply;
@@ -1701,7 +1989,7 @@ document.getElementById("start-button").addEventListener("click", async () => {
     btn.classList.remove("thinking");
     playPop();
   } catch (e) {
-    result.textContent = "Ask in chat: 'Where do I start? Pick one task and a 5-minute action.'";
+    result.textContent = "Ask in chat: 'Where do I start? Pick one task, a 5-minute action, and a $3M-vision quote.'";
     result.classList.add('show');
     btn.querySelector('.sb-l span:last-child').textContent = "Where do I start right now?";
     btn.classList.remove("thinking");
@@ -1713,14 +2001,20 @@ async function breakDownTask(taskText, key, btn) {
   if (btn) { btn.classList.add('thinking'); btn.textContent = 'Thinking…'; }
   try {
     const reply = await window.cowork.askClaude(
-      `Break this task into 3-5 specific 5-minute physical actions for someone with ADHD. Each action starts with a verb. NO preamble, NO numbering, NO bullets. Return one action per line. Task: "${taskText}"`,
+      `Tyra Harrison (Chief Possibility Pilot, EdJustice Collective, building toward a $3M/year corporation) needs this task broken into 3-5 specific 5-minute physical actions for ADHD. AFTER the actions, write ONE last line that starts with "VISION:" — a custom future-state quote in 8-12 words tying THIS task to the $3M future. Text-message register, lowercase ok, specific to this task (not generic). Each action starts with a verb. NO preamble, NO numbering, NO bullets. Return one action per line, then the VISION line at the end. Task: "${taskText}"`,
       []
     );
-    const lines = String(reply).split('\n').map(l => l.replace(/^[\s\-\*\d\.\)]+/, '').trim()).filter(l => l.length > 0).slice(0, 6);
+    const raw = String(reply).split('\n').map(l => l.replace(/^[\s\-\*\d\.\)]+/, '').trim()).filter(l => l.length > 0);
+    const visionLine = raw.find(l => /^VISION:/i.test(l));
+    const lines = raw.filter(l => !/^VISION:/i.test(l)).slice(0, 6);
     state.taskSubsteps[key] = lines.map(t => ({ text: t, done: false }));
+    if (visionLine) {
+      state.taskVisions = state.taskVisions || {};
+      state.taskVisions[key] = visionLine.replace(/^VISION:\s*/i, '');
+    }
     saveState(); renderAll();
   } catch (e) {
-    alert("Couldn't break this down. Ask in chat: 'Break into 5-minute actions: " + taskText + "'");
+    alert("Couldn't break this down. Ask in chat: 'Break into 5-minute actions + a $3M-vision quote: " + taskText + "'");
     if (btn) { btn.classList.remove('thinking'); btn.textContent = 'Break it down'; }
   }
 }
@@ -1763,11 +2057,29 @@ function renderRhythm() {
   }
   const insp = document.getElementById("inspire-line");
   if (insp) {
-    if (typeof state.inspireIdx !== 'number') state.inspireIdx = 0;
-    insp.textContent = INSPIRATIONS[state.inspireIdx % INSPIRATIONS.length];
+    // Daily quote is date-seeded; manual click can override to next
+    if (typeof state.inspireOverride === 'number' && state.inspireOverride >= 0) {
+      insp.textContent = INSPIRATIONS[state.inspireOverride % INSPIRATIONS.length];
+    } else {
+      insp.textContent = dailyPick(INSPIRATIONS);
+    }
     insp.style.cursor = 'pointer';
-    insp.title = 'Click to rotate inspiration';
-    insp.onclick = () => { state.inspireIdx = (state.inspireIdx + 1) % INSPIRATIONS.length; saveState(); renderRhythm(); };
+    insp.title = 'Click for another (today only)';
+    insp.onclick = () => {
+      const cur = (typeof state.inspireOverride === 'number') ? state.inspireOverride : INSPIRATIONS.indexOf(insp.textContent);
+      state.inspireOverride = (cur + 1) % INSPIRATIONS.length;
+      saveState();
+      renderRhythm();
+    };
+  }
+  // Today's nature spot in the ritual line
+  const ritualEl = document.querySelector('.rhythm .ritual');
+  if (ritualEl && !ritualEl.querySelector('.nature-pick')) {
+    const spot = dailyPick(NATURE_SPOTS);
+    const sp = document.createElement('span');
+    sp.className = 'nature-pick';
+    sp.innerHTML = '🌳 <b>' + escapeHtml(spot.name) + '</b> ' + escapeHtml(spot.note);
+    ritualEl.appendChild(sp);
   }
 }
 // ====== ATTENTION PANEL ======
@@ -1782,6 +2094,13 @@ function renderAttention() {
   const root = document.getElementById('attention-list');
   if (!root) return;
   const items = [];
+  // VIETNAM SEP — daily price-watch pin
+  const vietnamDate = new Date(2026, 8, 15); // Sept 15 2026 as midpoint anchor
+  const todayD = new Date(); todayD.setHours(0,0,0,0);
+  const vietnamDays = Math.ceil((vietnamDate - todayD) / 86400000);
+  if (vietnamDays > 0) {
+    items.push({ icon: '✈️', text: 'Vietnam trip · ' + vietnamDays + ' days · check Tampa→HAN/SGN price + book by ' + new Date(vietnamDate.getTime() - 56*86400000).toLocaleDateString() + ' (8-wk window)', type: vietnamDays <= 70 ? 'warning' : 'info' });
+  }
   if (state.alphaBetDeadline) {
     const d = daysUntilStr(state.alphaBetDeadline);
     if (d !== null && d >= 0 && d <= 16) items.push({ icon: '🏫', text: 'Alpha-Bet App due in ' + d + ' day' + (d === 1 ? '' : 's'), type: d <= 3 ? 'critical' : 'warning' });
@@ -1974,6 +2293,8 @@ function renderAll() {
   if (typeof renderFinanceWins === 'function') renderFinanceWins();
   if (typeof renderGrowth === 'function') renderGrowth();
   if (typeof renderAttention === 'function') renderAttention();
+  if (typeof renderAdventures === 'function') renderAdventures();
+  if (typeof applyLightMode === 'function') applyLightMode();
   renderWeek();
   renderCountdowns();
   renderTodaysThree();
