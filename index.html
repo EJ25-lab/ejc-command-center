@@ -584,6 +584,66 @@
 
   /* Footer */
   footer { font-size: 11px; padding: 14px; }
+
+  /* ========================================
+     v7 READABILITY PASS — bigger fonts everywhere
+     Tyra: "text is still uncomfortably small for me"
+     ======================================== */
+  body { font-size: 18px !important; }
+  .brand-sub { font-size: 16px !important; }
+  .today-date { font-size: 15px !important; }
+  .section-h h2 { font-size: 1.5rem !important; }
+  .section-h .hint { font-size: 15px !important; }
+
+  /* Today's 3 — primary scan area */
+  .t3-row input[type=text] { font-size: 18px !important; font-weight: 600 !important; }
+  .t3-row .lane-tag { font-size: 12px !important; padding: 6px 13px !important; }
+  .t3-row .break-btn { font-size: 12px !important; padding: 7px 13px !important; }
+
+  /* Substeps — biggest pain point */
+  .substep { font-size: 16px !important; padding: 10px 0 !important; }
+  .substep .micro-tag { font-size: 11px !important; }
+
+  /* Lane cards */
+  .lane h3 { font-size: 18px !important; }
+  .lane h3 .lane-emoji { font-size: 24px !important; }
+  .lane .lane-sub { font-size: 15px !important; }
+  .lane li { font-size: 17px !important; padding: 10px 0 !important; }
+
+  /* Countdowns + attention */
+  .countdown .value { font-size: 2.4rem !important; }
+  .countdown .sub { font-size: 15px !important; }
+  .countdown .label { font-size: 12px !important; }
+
+  /* XP strip */
+  .xp-strip .xp-num { font-size: 2.2rem !important; }
+  .xp-strip .streak { font-size: 17px !important; }
+  .xp-strip .target { font-size: 14px !important; }
+  .xp-strip .level-label { font-size: 12px !important; }
+
+  /* Wins + slipped */
+  .slipped li, .wins li { font-size: 16px !important; padding: 10px 0 !important; }
+  .slipped .empty, .wins .empty { font-size: 16px !important; }
+
+  /* Quicklinks + badges */
+  .quicklinks button { font-size: 16px !important; padding: 15px 18px !important; }
+  .badge { font-size: 14px !important; padding: 8px 18px !important; }
+
+  /* Rhythm ribbon */
+  .rhythm .ritual { font-size: 16px !important; }
+  .rhythm .loc-label { font-size: 12px !important; }
+  .rhythm .inspire { font-size: 17px !important; padding: 12px 18px !important; }
+  .rhythm .loc-pill { font-size: 14px !important; padding: 9px 16px !important; }
+
+  /* Mobile — extra bump for small viewports */
+  @media (max-width: 600px) {
+    body { font-size: 17px !important; }
+    .t3-row input[type=text] { font-size: 17px !important; }
+    .substep { font-size: 15.5px !important; }
+    .lane li { font-size: 16px !important; }
+    .rhythm .inspire { font-size: 16px !important; }
+    .rhythm .loc-pill { font-size: 13px !important; padding: 8px 14px !important; }
+  }
 </style>
 </head>
 <body>
