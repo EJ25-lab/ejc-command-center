@@ -1358,53 +1358,105 @@ function loadState() {
   }
 }
 
+// ===== v8 PERSISTENCE: visible sync with explicit verification =====
+function ccTsNow() {
+  const d = new Date();
+  return d.toTimeString().slice(0, 8);
+}
+function setSyncStatus(text, kind) {
+  try {
+    const el = document.getElementById('sync-pill');
+    if (!el) return;
+    el.textContent = text;
+    el.title = 'Tap to force sync · ' + text;
+    el.style.cursor = 'pointer';
+    if (kind === 'ok') {
+      el.style.background = '#D1FAE5'; el.style.color = '#065F46'; el.style.borderColor = '#10B981';
+    } else if (kind === 'err') {
+      el.style.background = '#FEE2E2'; el.style.color = '#991B1B'; el.style.borderColor = '#EF4444';
+    } else if (kind === 'work') {
+      el.style.background = '#FEF3C7'; el.style.color = '#92400E'; el.style.borderColor = '#F59E0B';
+    } else {
+      el.style.background = '#F9FAFB'; el.style.color = '#4A5C64'; el.style.borderColor = '#E8EAEA';
+    }
+  } catch(_){}
+}
+
 function saveState() {
-  // Local cache first for instant feel
   try {
     state.lastUpdated = new Date().toISOString();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch (e) {}
-  // Debounced sync to Sheet via Apps Script
   if (HAS_GAS) {
+    setSyncStatus('writing…', 'work');
     clearTimeout(window.__ccSaveTimer);
     window.__ccSaveTimer = setTimeout(() => {
       try {
         google.script.run
-          .withFailureHandler(err => { console.warn('cc save failed', err); })
-          .withSuccessHandler(() => { try { document.getElementById('sync-pill').textContent = '✓ synced'; } catch(_){} })
+          .withFailureHandler(err => setSyncStatus('❌ ' + ((err && err.message) || 'write fail').substring(0,40), 'err'))
+          .withSuccessHandler(result => {
+            if (typeof result === 'string' && result.indexOf('ERR:') === 0) {
+              setSyncStatus('❌ ' + result.substring(4, 50), 'err');
+            } else {
+              setSyncStatus('✓ saved ' + ccTsNow(), 'ok');
+            }
+          })
           .writeState(JSON.stringify(state));
-        try { document.getElementById('sync-pill').textContent = 'syncing…'; } catch(_){}
-      } catch (e) { console.warn('cc save throw', e); }
+      } catch (e) {
+        setSyncStatus('❌ throw: ' + e.message.substring(0,30), 'err');
+      }
     }, 1500);
+  } else {
+    setSyncStatus('local-only', '');
   }
 }
 
-// On startup, pull from Sheet if newer than local
 function pullFromSheet() {
-  if (!HAS_GAS) return;
+  if (!HAS_GAS) { setSyncStatus('local-only', ''); return; }
+  setSyncStatus('reading…', 'work');
   google.script.run
-    .withFailureHandler(err => console.warn('cc pull failed', err))
+    .withFailureHandler(err => setSyncStatus('❌ read: ' + ((err && err.message) || 'fail').substring(0,40), 'err'))
     .withSuccessHandler(jsonStr => {
-      if (!jsonStr) return;
+      if (!jsonStr) { setSyncStatus('✓ empty ' + ccTsNow(), 'ok'); return; }
+      if (typeof jsonStr === 'string' && jsonStr.indexOf('ERR:') === 0) {
+        setSyncStatus('❌ ' + jsonStr.substring(4, 50), 'err');
+        return;
+      }
       try {
         const serverState = JSON.parse(jsonStr);
-        if (!serverState || typeof serverState !== 'object') return;
+        if (!serverState || typeof serverState !== 'object') {
+          setSyncStatus('✓ ready ' + ccTsNow(), 'ok'); return;
+        }
         const localTs = (state.lastUpdated && new Date(state.lastUpdated).getTime()) || 0;
         const serverTs = (serverState.lastUpdated && new Date(serverState.lastUpdated).getTime()) || 0;
         if (serverTs > localTs) {
           state = Object.assign(structuredClone(DEFAULT_STATE), serverState);
           try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(_){}
           renderAll();
-          try { document.getElementById('sync-pill').textContent = '✓ synced'; } catch(_){}
+          setSyncStatus('✓ pulled ' + ccTsNow(), 'ok');
+        } else {
+          setSyncStatus('✓ in sync ' + ccTsNow(), 'ok');
         }
-      } catch (e) { console.warn('cc pull parse', e); }
+      } catch (e) {
+        setSyncStatus('❌ parse: ' + e.message.substring(0,30), 'err');
+      }
     })
     .readState();
 }
-// Also re-pull when tab regains focus
+
+// Tap sync-pill to force a sync
+document.addEventListener('click', e => {
+  if (e.target && e.target.id === 'sync-pill') {
+    if (HAS_GAS) pullFromSheet();
+    else setSyncStatus('local-only', '');
+  }
+});
+
 if (HAS_GAS) {
   window.addEventListener('focus', () => pullFromSheet());
   setTimeout(pullFromSheet, 500);
+} else {
+  setSyncStatus('local-only', '');
 }
 
 // ============ COUNTDOWNS ============
