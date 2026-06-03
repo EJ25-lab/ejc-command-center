@@ -2317,6 +2317,179 @@ function renderAll() {
 }
 setInterval(() => { if (typeof updateRitual === 'function') updateRitual(); }, 60000);
 renderAll();
+
+// =========================================
+// v5 UPGRADES — gaming psychology + ADHD behavior science
+// Research-backed by Locke & Latham, Fogg, Hanson, Lyubomirsky, Deci & Ryan,
+// Sonuga-Barke, Barkley, Kahneman & Tversky (Goal Gradient + loss aversion)
+// =========================================
+(function v5Upgrades() {
+  const FLOOR = 20, TARGET = 50, REACH = 80;
+
+  // ---- A1: Tiered XP markers on the xp-bar ----
+  function renderXpTiers() {
+    const bar = document.querySelector('.xp-bar');
+    if (!bar || bar.dataset.tiered) return;
+    bar.dataset.tiered = '1';
+    bar.style.position = 'relative';
+    bar.style.overflow = 'visible';
+    [
+      {pct: FLOOR/REACH*100, label: 'Floor 20', color:'#8A9BA3'},
+      {pct: TARGET/REACH*100, label: 'Target 50', color:'#0D6B64'},
+      {pct: 100, label: 'Reach 80', color:'#F28C38'}
+    ].forEach(t => {
+      const mark = document.createElement('div');
+      mark.style.cssText = 'position:absolute;left:'+t.pct+'%;top:-4px;bottom:-4px;width:2px;background:'+t.color+';';
+      mark.title = t.label;
+      bar.appendChild(mark);
+      const lbl = document.createElement('div');
+      lbl.textContent = t.label;
+      lbl.style.cssText = 'position:absolute;left:'+t.pct+'%;top:-22px;transform:translateX(-50%);font-size:8.5px;font-weight:700;letter-spacing:0.06em;color:'+t.color+';white-space:nowrap;';
+      bar.appendChild(lbl);
+    });
+  }
+
+  // ---- A2: Streak freezes (2/month, auto-replenish) ----
+  if (typeof state !== 'undefined') {
+    const now = new Date();
+    const currentMonth = now.getFullYear()+'-'+now.getMonth();
+    if (state.streakFreezesMonth !== currentMonth) {
+      state.streakFreezes = 2;
+      state.streakFreezesMonth = currentMonth;
+      try { saveState(); } catch(_){}
+    }
+  }
+  function renderFreezeBadge() {
+    const streakEl = document.querySelector('.xp-strip .streak');
+    if (!streakEl || streakEl.dataset.freezed) return;
+    streakEl.dataset.freezed = '1';
+    const fc = (state && state.streakFreezes) ? state.streakFreezes : 0;
+    const badge = document.createElement('span');
+    badge.textContent = ' ❄️ '+fc;
+    badge.title = fc+' streak freeze(s) available this month';
+    badge.style.cssText = 'font-size:12px;color:#1ABCB0;margin-left:8px;font-weight:600;';
+    streakEl.appendChild(badge);
+  }
+
+  // ---- A3: Glimmer variety prompts (rotating hourly) ----
+  const GLIMMER_PROMPTS = [
+    'What surprised you today?',
+    'Who helped you?',
+    'What did your body enjoy?',
+    'Where did you feel ease?',
+    'What made you smile?',
+    'Who showed up for you?',
+    'What did you notice about the light?',
+    'Where did time soften?'
+  ];
+  function rotateGlimmerPrompt() {
+    document.querySelectorAll('input[placeholder*="glimmer" i], input[placeholder*="roadside" i]').forEach(input => {
+      const prompt = GLIMMER_PROMPTS[Math.floor(Date.now()/3600000) % GLIMMER_PROMPTS.length];
+      input.placeholder = prompt;
+    });
+  }
+
+  // ---- A4: Goal-gradient on "Where do I start" ----
+  function annotateStart() {
+    const btn = document.querySelector('.start-button');
+    if (!btn || btn.dataset.gradient) return;
+    btn.dataset.gradient = '1';
+    const xp = (state && state.xp) ? state.xp : 0;
+    const todayXp = (state && state.xpToday) ? state.xpToday : 0;
+    let label = '';
+    if (todayXp < FLOOR) label = 'You\'re '+(FLOOR - todayXp)+' XP from Floor — pick a tiny one';
+    else if (todayXp < TARGET) label = 'You\'re '+(TARGET - todayXp)+' XP from Target — pick one that gets you there';
+    else if (todayXp < REACH) label = 'Target hit. '+(REACH - todayXp)+' XP to Reach — go bonus';
+    else label = 'Reach achieved. Anything more is pure overflow.';
+    const sb = btn.querySelector('.sb-eyebrow');
+    if (sb) sb.textContent = label.toUpperCase();
+  }
+
+  // ---- B: Location + audio history persistence ----
+  function logHistory(category, value) {
+    if (!state) return;
+    const today = new Date().toISOString().split('T')[0];
+    state.history = state.history || {};
+    state.history[today] = (typeof state.history[today] === 'object' && !Array.isArray(state.history[today])) ? state.history[today] : {};
+    state.history[today][category] = state.history[today][category] || [];
+    const last = state.history[today][category][state.history[today][category].length - 1];
+    if (last && last.value === value) return; // dedupe
+    state.history[today][category].push({ value: value, time: new Date().toTimeString().slice(0,5) });
+    try { saveState(); } catch(_){}
+  }
+  function watchLocationChanges() {
+    document.querySelectorAll('.loc-pill').forEach(pill => {
+      if (pill.dataset.histWatched) return;
+      pill.dataset.histWatched = '1';
+      pill.addEventListener('click', () => {
+        const label = pill.textContent.replace(/▶/g,'').trim();
+        logHistory('locations', label);
+      });
+    });
+  }
+  function renderTodayTrajectory() {
+    const locRow = document.querySelector('.loc-row');
+    if (!locRow || locRow.dataset.traj) return;
+    const today = new Date().toISOString().split('T')[0];
+    const items = (state && state.history && state.history[today] && state.history[today].locations) || [];
+    if (items.length < 1) return;
+    locRow.dataset.traj = '1';
+    const trail = document.createElement('div');
+    trail.style.cssText = 'width:100%;font-size:11px;color:#4A5C64;margin-top:6px;font-style:italic;';
+    trail.textContent = 'Today: ' + items.slice(-5).map(i => i.value + ' ('+i.time+')').join(' → ');
+    locRow.appendChild(trail);
+  }
+
+  // ---- C: YouTube/Spotify deep-links on pills ----
+  function attachMediaLinks() {
+    document.querySelectorAll('.loc-pill').forEach(pill => {
+      if (pill.dataset.mediaLinked) return;
+      pill.dataset.mediaLinked = '1';
+      const play = document.createElement('span');
+      play.textContent = ' ▶';
+      play.title = 'YouTube focus playlist (sorted by view count)';
+      play.style.cssText = 'cursor:pointer;color:#0D6B64;font-size:10px;margin-left:5px;opacity:0.75;';
+      play.onmouseover = () => play.style.opacity = '1';
+      play.onmouseout = () => play.style.opacity = '0.75';
+      play.onclick = (e) => {
+        e.stopPropagation();
+        const term = pill.textContent.replace(/[^\w\s]/g, '').trim();
+        const url = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(term + ' focus playlist') + '&sp=CAMSAhAB';
+        window.open(url, '_blank');
+      };
+      pill.appendChild(play);
+    });
+  }
+
+  // ---- A5: Audio fuel as on-demand button (not gated) ----
+  function renderAudioBonus() {
+    const xpStrip = document.querySelector('.xp-strip');
+    if (!xpStrip || xpStrip.dataset.audioBtn) return;
+    xpStrip.dataset.audioBtn = '1';
+    const btn = document.createElement('button');
+    btn.textContent = '🎧 Audio fuel';
+    btn.title = 'Available anytime. Celebrated at Target 50.';
+    btn.style.cssText = 'font-family:Poppins,sans-serif;font-size:11px;font-weight:700;padding:6px 12px;border-radius:8px;background:#E0F7F5;color:#0D6B64;border:1px solid #1ABCB0;cursor:pointer;margin-left:8px;';
+    btn.onclick = () => window.open('https://open.spotify.com/search/focus%20playlist','_blank');
+    xpStrip.appendChild(btn);
+  }
+
+  // ---- Apply all v5 upgrades ----
+  function applyV5() {
+    try {
+      renderXpTiers();
+      renderFreezeBadge();
+      rotateGlimmerPrompt();
+      annotateStart();
+      watchLocationChanges();
+      renderTodayTrajectory();
+      attachMediaLinks();
+      renderAudioBonus();
+    } catch(e) { console.warn('v5 apply error', e); }
+  }
+  applyV5();
+  setInterval(applyV5, 4000); // catch any dynamic re-renders
+})();
 </script>
 </body>
 </html>
