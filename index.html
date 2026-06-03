@@ -408,8 +408,12 @@
     .today-date { text-align: left; font-size: 12px; }
 
     /* Top-right pills: shrink + restack */
-    .sound-toggle { top: 8px; right: 8px; padding: 5px 9px; font-size: 10px; }
-    #sync-pill { top: 8px; right: 8px !important; left: 8px; padding: 5px 9px; font-size: 10px; }
+    /* v6 mobile fix: stack 3 pills horizontally at top, push header down */
+    .sound-toggle { top: 8px !important; right: 8px !important; left: auto !important; padding: 4px 8px !important; font-size: 9.5px !important; z-index: 100 !important; }
+    .light-toggle { top: 8px !important; right: 100px !important; left: auto !important; padding: 4px 8px !important; font-size: 9.5px !important; z-index: 100 !important; }
+    #sync-pill { top: 8px !important; right: auto !important; left: 8px !important; padding: 4px 8px !important; font-size: 9.5px !important; z-index: 100 !important; }
+    /* push header down so floating pills don't overlap eyebrow + title */
+    header { margin-top: 36px !important; }
 
     /* Section headings — tighter */
     .section-h { padding-bottom: 6px; margin-bottom: 12px; }
